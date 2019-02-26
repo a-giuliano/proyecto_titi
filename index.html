@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <title>Proyecto Titi</title>
+  
+  <!-- Data Table CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.4/css/buttons.dataTables.min.css">
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="CSS/style.css">  
+    
+</head>
+
+<body>
+  
+  <div id="login_div" class="main-div">
+    <h3>Proyecto Titi Login</h3>
+    <input type="email" placeholder="Email..." id="email_field">
+    <input type="password" placeholder="Password..." id="password_field">
+    
+    <button onclick="login()">Login</button>
+  </div>
+    
+  <div id="user_div" class="loggedin-div">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4F70CF;">
+      <div class="container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Table View</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="map.html">Map View</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" onclick="logout()">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+    <header>
+      <div class="jumbotron jumbotron-fluid" style="background-color: #4F70CF;">
+        <div class="container">
+          <img src="img/banner.png">
+        </div>
+      </div>
+    </header>
+    
+    <table id="myTable" class="display"> 
+      <thead>
+        <tr>
+          <th></th>
+          <th>Number</th>
+          <th>Family Name</th>
+          <th>Community</th>
+          <th>Last Visit</th>
+          <th>Total Compliance</th>
+          <th>Animals</th>
+          <th>Conservation</th>
+          <th>Recycling</th>
+          <th>Structures</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyC4-PaL6f0fp5BsaFjd-MwbS1_IJrXxnlI",
+      authDomain: "proyectotiti-6da63.firebaseapp.com",
+      databaseURL: "https://proyectotiti-6da63.firebaseio.com",
+      projectId: "proyectotiti-6da63",
+      storageBucket: "proyectotiti-6da63.appspot.com",
+      messagingSenderId: "424113983868"
+    };
+    firebase.initializeApp(config);
+  </script>
+  
+  <!-- jQuery Scripts -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+  <!-- Bootstrap Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+  <!-- Main Scripts -->
+  <script src="JS/main.js"></script>
+  <script src="JS/login.js"></script>
+  
+  
+    
+</body>
+    
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+    
+    <title>Proyecto Titi</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="CSS/map.css">
+    
+</head>
+    
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #4F70CF;">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Table View</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="map.html">Map View</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <header>
+        <div class="jumbotron jumbotron-fluid" style="background-color: #4F70CF;">
+            <div class="container">
+                <img src="img/banner.png">
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <h3 class="text-center">Color map points by: </h3>
+                    <nav class="nav justify-content-center nav-pills flex-column flex-md-row py-2">
+                        <a class="nav-link active" href="#lastVisit" data-toggle="tab" onclick="setActive('Last Visit')">Last Visit</a>
+                        <a class="nav-link" href="#compliance" data-toggle="tab" onclick="setActive('Compliance')">Compliance</a>
+                    </nav>
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="lastVisit">
+                            <ul>
+                                <li><img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png">Visited Within the Last Month</li>
+                                <li><img src="http://maps.google.com/mapfiles/ms/icons/yellow-dot.png">Visited Within the Last 3 Months</li>
+                                <li><img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png">Hasn't Been Visited in 3 Months</li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane" id="compliance">
+                            <ul>
+                                <li><img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png">Compliant</li>
+                                <li><img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png">Noncompliant</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card text-center">
+                    <h2 id="description">Map colored according to: Last Visit</h2> <!-- Fix this, really shouldn't be hard coded -->
+                    <div id="googleMap" style="height: 500px;">
+                </div>
+            </div>
+                
+        </div>
+    </div>
+    
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------->
+    
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+        apiKey: "AIzaSyC4-PaL6f0fp5BsaFjd-MwbS1_IJrXxnlI",
+        authDomain: "proyectotiti-6da63.firebaseapp.com",
+        databaseURL: "https://proyectotiti-6da63.firebaseio.com",
+        projectId: "proyectotiti-6da63",
+        storageBucket: "proyectotiti-6da63.appspot.com",
+        messagingSenderId: "424113983868"
+        };
+        firebase.initializeApp(config);
+    </script>
+
+    <!-- Main Script -->
+    <script src="JS/map.js"></script>
+    
+    <!-- Google Maps Scripts --> 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFqI1VvRqQ5DjsNvxPe1Bzq12i-T2pQ_A&callback=initMap"></script>
+    
+    <!-- Bootstrap Scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    
+
+</body>
+</html>
