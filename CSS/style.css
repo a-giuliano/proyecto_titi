@@ -61,3 +61,11 @@ input, button{
   border: 1px solid #5d8ffc;
   cursor: pointer;
 }
+
+td.details-control {
+  background: url('../img/plus.png') no-repeat center center; 
+  cursor: pointer;
+}
+tr.shown td.details-control {
+  background: url('../img/minus.png') no-repeat center center; 
+}
