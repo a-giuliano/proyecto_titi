@@ -23,7 +23,7 @@
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Table View</a>
+                        <a class="nav-link" href="table.html">Table View</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="map.html">Map View</a>
@@ -46,27 +46,14 @@
             
             <div class="col-md-4">
                 <div class="card">
-                    <h3 class="text-center">Color map points by: </h3>
-                    <nav class="nav justify-content-center nav-pills flex-column flex-md-row py-2">
-                        <a class="nav-link active" href="#lastVisit" data-toggle="tab" onclick="setActive('Last Visit')">Last Visit</a>
-                        <a class="nav-link" href="#compliance" data-toggle="tab" onclick="setActive('Compliance')">Compliance</a>
-                    </nav>
-                    
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="lastVisit">
-                            <ul>
-                                <li><img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png">Visited Within the Last Month</li>
-                                <li><img src="http://maps.google.com/mapfiles/ms/icons/yellow-dot.png">Visited Within the Last 3 Months</li>
-                                <li><img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png">Hasn't Been Visited in 3 Months</li>
-                            </ul>
-                        </div>
-                        <div class="tab-pane" id="compliance">
-                            <ul>
-                                <li><img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png">Compliant</li>
-                                <li><img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png">Noncompliant</li>
-                            </ul>
-                        </div>
-                    </div>
+                    <ul>
+                        <li><img src="/img/marker_circle_green.png">Visited Within the Last Month, Compliant</li>
+                        <li><img src="/img/marker_circle_orange.png">Visited Within the Last 3 Months, Compliant</li>
+                        <li><img src="/img/marker_circle_red.png">Hasn't Been Visited in 3 Months, Compliant</li>
+                        <li><img src="/img/marker_star_green.png">Visited Within the Last Month, Non-compliant</li>
+                        <li><img src="/img/marker_star_orange.png">Visited Within the Last 3 Months, Non-compliant</li>
+                        <li><img src="/img/marker_star_red.png">Hasn't Been Visited in 3 Months, Non-compliant</li>
+                    </ul>
                 </div>
             </div>
             

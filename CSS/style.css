@@ -22,11 +22,11 @@ input, button{
   margin: 0px auto;
   margin-top: 150px;
   padding: 20px;
-  display: none;
+  display: block;
 }
 
 .loggedin-div{
-  display: none;
+  display: block;
 }
 
 .main-div input{
