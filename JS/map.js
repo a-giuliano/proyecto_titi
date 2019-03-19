@@ -6,9 +6,6 @@ var rootRef = firebase.database().ref().child("families");
 // main map
 var map;
 
-// currently active color selector
-var active = 'Last Visit';
-
 window.onload = main;
 
 function main(){
@@ -20,12 +17,7 @@ function main(){
         var gps_coords = getCoords(snap);
         
         //determine active selector
-        if (active == 'Last Visit'){
-            var color_url = getDateColor(snap);
-        }
-        else if(active == 'Compliance'){
-            var color_url = getComplianceColor(snap);
-        }
+        var color_url = getMarker(snap);
         
         // add markers
         if(gps_coords){
@@ -88,7 +80,7 @@ function getCoords(snap){
     
 }
 
-function getDateColor(snap){
+function getMarker(snap){
     // dictionary structure of each of the visits 
     var visits = JSON.parse(JSON.stringify(snap.child("visits").val()));
     
@@ -121,18 +113,33 @@ function getDateColor(snap){
     var timeDelay = parseInt((currentDate - visitDate)*0.000000015741); // time btwn visits in days
     
     if (timeDelay <= 30){
-        return "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
+        if(isCompliant(snap)){
+            return "../img/marker_circle_green.png";
+        }
+        else{
+            return "../img/marker_star_green.png";
+        }  
     }
     else if( timeDelay <= 90){
-        return "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png";
+        if(isCompliant(snap)){
+            return "../img/marker_circle_orange.png";
+        }
+        else{
+            return "../img/marker_star_orange.png";
+        }
     }
     else{
-        return "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
+        if(isCompliant(snap)){
+            return "../img/marker_circle_red.png";
+        }
+        else{
+            return "../img/marker_star_red.png";
+        }
     }
     
 }
 
-function getComplianceColor(snap){
+function isCompliant(snap){
     // dictionary structure of each of the visits 
     var visits = JSON.parse(JSON.stringify(snap.child("visits").val()));
     
@@ -172,20 +179,8 @@ function getComplianceColor(snap){
     
     var totalCompliance = animals && conservation && recycle && structures;
     
-    if (totalCompliance){
-        return "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
-    }
-    else{
-        return "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
-    }
+    return totalCompliance;
     
-}
-
-//update map according to color selector
-function setActive(selector){
-    active = selector;
-    document.getElementById("description").innerHTML = "Map colored according to: " + active;
-    main();
 }
 
 function getContent(snap){

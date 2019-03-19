@@ -2,60 +2,10 @@
 
 var ref = database.ref("families");
 
-// initialize data table
-//var table;
-
-
 window.onload = function main(){
     var promise = ref.once('value').then(generateData);
     var promise2 = promise.then(constructTable)
     promise2.then(assignFunctionality);
-}
-
-function assignFunctionality(table){
-    $('#myTable tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = table.row( tr );
-    
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        }
-        else {
-            // Open this row
-            row.child( format(row.data()) ).show();
-            tr.addClass('shown');
-        }
-    } );
-}
-
-function constructTable(data){
-  var table;
-  console.log(data);
-  table = $('#myTable').DataTable({
-    data: data,
-    columns: [
-        {
-            "className":      'details-control',
-            "orderable":      false,
-            "data":           null,
-            "defaultContent": ''
-        },
-        { data: 'familyID' },
-        { data: 'familyName' },
-        { data: 'community' },
-        { data: 'lastVisitDate' },
-        { data: 'totalCompliance' },
-        { data: 'animals' },
-        { data: 'conservation' },
-        { data: 'recycle' },
-        { data: 'structures' }
-    ]
-  });
-
-  return table;
-
 }
 
 function generateData(data){
@@ -149,6 +99,52 @@ function generateData(data){
     }
 
     return data;
+}
+
+function constructTable(data){
+    var table;
+    console.log(data);
+    table = $('#myTable').DataTable({
+      data: data,
+      columns: [
+          {
+              "className":      'details-control',
+              "orderable":      false,
+              "data":           null,
+              "defaultContent": ''
+          },
+          { data: 'familyID' },
+          { data: 'familyName' },
+          { data: 'community' },
+          { data: 'lastVisitDate' },
+          { data: 'totalCompliance' },
+          { data: 'animals' },
+          { data: 'conservation' },
+          { data: 'recycle' },
+          { data: 'structures' }
+      ]
+    });
+  
+    return table;
+  
+  }
+
+function assignFunctionality(table){
+    $('#myTable tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+    
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+        }
+    } );
 }
 
 function format ( d ) {
