@@ -1,7 +1,7 @@
 firebase.auth().onAuthStateChanged(function(user){
   if(user){
     // User is signed in
-    window.location.href = "../table.html";
+    window.location.href = "table.html";
     console.log('success');
   }
   else{

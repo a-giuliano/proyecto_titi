@@ -13,6 +13,7 @@ function generateData(data){
     var keys = Object.keys(families);
 
     var data = [];
+    var csvData = [];
 
     for(var i = 0; i < keys.length; i++){
         var family = families[keys[i]];
@@ -91,19 +92,36 @@ function generateData(data){
             "conservation"      : conservation,
             "recycle"           : recycle,
             "structures"        : structures,
-            "test"              : 123
+            "visits"            : visits
         };
 
-        data.push(entry);
+        var csvEntry = {
+            "Family ID"          : familyID,
+            "Family Name"        : familyName,
+            "Community"         : community,
+            "Last Visit Date"     : date,
+            "Total Compliance"   : totalCompliance,
+            "Animals"           : animals,
+            "Conservation"      : conservation,
+            "Recycle"           : recycle,
+            "Structures"        : structures,
+        }
 
+        data.push(entry);
+        csvData.push(csvEntry);
     }
+
+    // load data into csv file link
+    var csvLink = document.querySelector('#csv-link');
+    var csvFile = new Blob([Papa.unparse(csvData)], {type: 'text'});
+    csvLink.href = URL.createObjectURL(csvFile);
+    csvLink.download = 'PTDataTable.csv';
 
     return data;
 }
 
 function constructTable(data){
     var table;
-    console.log(data);
     table = $('#myTable').DataTable({
       data: data,
       columns: [
@@ -148,13 +166,58 @@ function assignFunctionality(table){
 }
 
 function format ( d ) {
-    // `d` is the original data object for the row
-    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-        '<tr>'+
-            '<td>Test:</td>'+
-            '<td>'+d.test+'</td>'+
-        '</tr>'+
-    '</table>';
+    var html = `
+    <div id="details">
+        <h1>Details</h1>
+        <p>Click the cells on the right to get specifics for each visit</p>
+    </div>
+    <table id="visits-table" >
+    `;
+    for(var visit in d.visits){
+        // get all animal data
+        var animalData = JSON.stringify(d.visits[visit]['animals']);
+        animalData = animalData.replace(/"/g, "'");
+
+        // get all conservation data
+        var conservationData = JSON.stringify(d.visits[visit]['conservation']);
+        conservationData = conservationData.replace(/"/g, "'");
+
+        html += 
+        `<tr>
+            <td>${visit}:</td>
+            <td class="click-cell" onclick="showDetails(${animalData}, 'animal');">Animals: ${d.visits[visit]['animals']['compliant']}</td>
+            <td class="click-cell" onclick="showDetails(${conservationData}, 'conservation');">Conservation: ${d.visits[visit]['conservation']['compliant']}</td>
+            <td>Recycling: ${d.visits[visit]['recycle']['compliant']}</td>
+            <td>Structures: ${d.visits[visit]['structures']['compliant']}</td>
+        </tr>`
+    }
+    html += '</table>';
+    return html;
+}
+
+function showDetails(data, type){
+    var html = `<h1>Details</h1>`;
+    if(type == 'animal'){
+        html += `<h2>Domestic:</h2><ul>`
+        for(var animal in data['domestic']){
+            html += `
+                <li><b>Name</b>: ${data['domestic'][animal]['name']}, <b>Type</b>: ${data['domestic'][animal]['type']}</li>
+            `;
+        }
+        html += `</ul>`;
+        html += `<h2>Wild:</h2><ul>`
+        for(var animal in data['wild']){
+            html += `
+                <li><b>Name</b>: ${data['wild'][animal]['name']}, <b>Type</b>: ${data['wild'][animal]['type']}</li>
+            `;
+        }
+        html += `</ul>`;
+    }
+    else if(type == 'conservation'){
+        html += `<h3>Area: ${data['area']}</h3>`;
+    }
+
+    var detailsPane = document.querySelector('#details').innerHTML = html;
 }
 
 function getDateColor(snap){
