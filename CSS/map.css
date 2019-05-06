@@ -6,23 +6,23 @@ Turquoise:   #13BBAE
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 
 body{
-    margin: 0;
-    padding: 0;
-    font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
 }
 
 #googleMap{
-    margin: 2%;
+  margin: 2%;
 }
 
-.tab-content ul{
-    list-style-type: none;
-    margin: none;
-    padding: none;
+#legend{
+  list-style-type: none;
+  margin: none;
+  padding: none;
 }
 
-.tab-content li{
-    padding: 1%;
+#legend li{
+  padding: 1%;
 }
 
 .infoWindow h1{

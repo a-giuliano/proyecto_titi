@@ -2,17 +2,13 @@
 <html>
   
 <head>
-  <title>Proyecto Titi - Table</title>
-  
-  <!-- Data Table CSS -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.4/css/buttons.dataTables.min.css">
+  <title>Proyecto Titi - Summary</title>
   
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="CSS/table.css">  
+  <link rel="stylesheet" href="CSS/summary.css">  
     
 </head>
 
@@ -51,27 +47,15 @@
       </div>
     </header>
 
-    <a id="csv-link">Download table as csv</a>
-    
-    <table id="myTable" class="display"> 
-      <thead>
-        <tr>
-          <th></th>
-          <th>Number</th>
-          <th>Family Name</th>
-          <th>Community</th>
-          <th>Last Visit</th>
-          <th>Total Compliance</th>
-          <th>Animals</th>
-          <th>Conservation</th>
-          <th>Recycling</th>
-          <th>Structures</th>
-        </tr>
-      </thead>
-    </table>
+    <!-- Cards -->
+    <div class="card" id="nfmailies-card"></div>
+    <div class="card" id="compliant-percentage-card"></div>
+    <div class="card" id="total-visits-card"></div>
+
   </div>
   
   <!--------------- Scripts --------------->
+
 
   <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
@@ -85,11 +69,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-  <!-- PAPA PARSE SCRIPT -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
-
   <!-- Main Scripts -->
-  <script src="JS/table.js"></script>
+  <script src="JS/summary.js"></script>
   <script src="JS/logout.js"></script>
     
 </body>

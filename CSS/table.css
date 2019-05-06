@@ -70,22 +70,37 @@ tr.shown td.details-control {
   background: url('../img/minus.png') no-repeat center center; 
 }
 
+#details-header{
+  color: #5d8ffc;
+}
+
 #details{
-  width: 45%;
+  width: 60%;
   padding: 0;
-  margin: 0;
+  margin: 0 10px;
   display: inline-block;
   vertical-align: top;
 }
 
 #visits-table{
-  width: 54%;
-  padding: 0;
-  margin: 0;
+  width: 35%;
   display: inline-block;
   vertical-align: top;
+  text-align: center;
+}
+
+.visit-number, .category{
+  background: #5d8ffc;
+  color: #fff;
+  font-weight: 700;
+  border: none !important;
 }
 
 .click-cell{
   cursor: pointer;
+  font-weight: 400;
+}
+
+.clicked{
+  font-weight: 700;
 }

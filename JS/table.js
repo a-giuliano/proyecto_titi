@@ -168,10 +168,17 @@ function assignFunctionality(table){
 function format ( d ) {
     var html = `
     <div id="details">
-        <h1>Details</h1>
+        <h1 id="details-header">Details</h1>
         <p>Click the cells on the right to get specifics for each visit</p>
     </div>
     <table id="visits-table" >
+        <tr>
+            <th class="category"></th>
+            <th class="category">Animals</th>
+            <th class="category">Conservation</th>
+            <th class="category">Recycling</th>
+            <th class="category">Structures</th>
+        </tr>
     `;
     for(var visit in d.visits){
         // get all animal data
@@ -182,39 +189,82 @@ function format ( d ) {
         var conservationData = JSON.stringify(d.visits[visit]['conservation']);
         conservationData = conservationData.replace(/"/g, "'");
 
+        // get all recycle data
+        var recycleData = JSON.stringify(d.visits[visit]['recycle']);
+        recycleData = recycleData.replace(/"/g, "'");
+
+        // get all structures data
+        var structuresData = JSON.stringify(d.visits[visit]['structures']);
+        structuresData = structuresData.replace(/"/g, "'");
+
+        var formattedVisit = 'V' + visit.slice(1, 5) + ' ' + visit.slice(5);
+
         html += 
         `<tr>
-            <td>${visit}:</td>
-            <td class="click-cell" onclick="showDetails(${animalData}, 'animal');">Animals: ${d.visits[visit]['animals']['compliant']}</td>
-            <td class="click-cell" onclick="showDetails(${conservationData}, 'conservation');">Conservation: ${d.visits[visit]['conservation']['compliant']}</td>
-            <td>Recycling: ${d.visits[visit]['recycle']['compliant']}</td>
-            <td>Structures: ${d.visits[visit]['structures']['compliant']}</td>
+            <td class="visit-number">${formattedVisit}:</td>
+            <td class="click-cell" onclick="showDetails(this, ${animalData}, 'animal');">${d.visits[visit]['animals']['compliant']}</td>
+            <td class="click-cell" onclick="showDetails(this, ${conservationData}, 'conservation');">${d.visits[visit]['conservation']['compliant']}</td>
+            <td class="click-cell" onclick="showDetails(this, ${recycleData}, 'recycle');">${d.visits[visit]['recycle']['compliant']}</td>
+            <td class="click-cell" onclick="showDetails(this, ${structuresData}, 'structures');">${d.visits[visit]['structures']['compliant']}</td>
         </tr>`
     }
     html += '</table>';
     return html;
 }
 
-function showDetails(data, type){
-    var html = `<h1>Details</h1>`;
+function showDetails(cell, data, type){
+    var html = `<h1 id="details-header">Details</h1>`;
+    if(document.getElementsByClassName('clicked')[0]) document.getElementsByClassName('clicked')[0].className = "click-cell";
+    cell.className = 'clicked';
     if(type == 'animal'){
         html += `<h2>Domestic:</h2><ul>`
         for(var animal in data['domestic']){
             html += `
-                <li><b>Name</b>: ${data['domestic'][animal]['name']}, <b>Type</b>: ${data['domestic'][animal]['type']}</li>
+                <li>
+                    <b>Type</b>: ${data['domestic'][animal]['type']},
+                    <b>Count</b>: ${data['domestic'][animal]['amount']},
+                    <b>Compliant</b>: ${data['domestic'][animal]['compliant']}
+                </li>
             `;
         }
         html += `</ul>`;
         html += `<h2>Wild:</h2><ul>`
         for(var animal in data['wild']){
             html += `
-                <li><b>Name</b>: ${data['wild'][animal]['name']}, <b>Type</b>: ${data['wild'][animal]['type']}</li>
+                <li>
+                    <b>Classification</b>: ${data['wild'][animal]['classification']}, 
+                    <b>Type</b>: ${data['wild'][animal]['type']},
+                    <b>Function</b>: ${data['wild'][animal]['function']},
+                    <b>Origin</b>: ${data['wild'][animal]['origin']},
+                    <b>Marking</b>: ${data['wild'][animal]['marking']},
+                    <b>Compliant</b>: ${data['wild'][animal]['compliant']}
+                </li>
             `;
         }
         html += `</ul>`;
     }
     else if(type == 'conservation'){
-        html += `<h3>Area: ${data['area']}</h3>`;
+        html += `<p><b>Property hectares: </b>${data['area']}</p>`;
+    }
+    else if(type == 'recycle'){
+        html += `
+            <p><b>Recycle delivery:</b> ${data['recycle_deliver']}</p>
+            <p><b>Does recycle:</b> ${data['doRecycle']}</p>
+        `;
+    }
+    else if(type == 'structures'){
+        for(var structure in data['construction']){
+            html += `
+                <li>
+                    <b>Name</b>: ${data['construction'][structure]['name']},
+                    <b>Size</b>: ${data['construction'][structure]['size']},
+                    <b>Type</b>: ${data['construction'][structure]['type']},
+                    <b>Function</b>: ${data['construction'][structure]['function']},
+                    <b>Condition</b>: ${data['construction'][structure]['condition']},
+                    <b>Comlpiant</b>: ${data['construction'][structure]['compliant']}
+                </li>
+            `;
+        }
     }
 
     var detailsPane = document.querySelector('#details').innerHTML = html;
