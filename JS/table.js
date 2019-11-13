@@ -15,20 +15,33 @@ function generateData(data){
     var data = [];
     var csvData = [];
 
+    var empties = [];
+    var empty = false;
+
+    var truePng = '<img height="20px" width="20px" src="img/check.png"/>';
+    var falsePng = '<img height="20px" width="20px" src="img/reject.png/>';
+
     for(var i = 0; i < keys.length; i++){
         var family = families[keys[i]];
-        
+
         // family ID
-        var familyID = family.id;
+	var familyID = family.id;
+        if (familyID == null || familyID == undefined){
+		continue;
+	}
 
         // get most recent visit
         var visits = family.visits;
         var targetVisit = visits[Object.keys(visits)[Object.keys(visits).length - 1]];
 
-        // basic data
+	// basic data
         var familyName = targetVisit.basicData.name;
         var community = targetVisit.basicData.community;
-        
+      
+	if (familyName == "") {
+		empty = true;
+	}
+ 
         // determine date of most recent visit
         var day = parseInt(targetVisit.date.day);
         var monthNumbers = {
@@ -52,34 +65,34 @@ function generateData(data){
 
         // determine compliance of each factor
         if ("animals" in targetVisit && "compliant" in targetVisit.animals){
-            var animals = targetVisit.animals.compliant;
+	    var animals = (targetVisit.animals.compliant ? truePng : falsePng);
         }
         else{
-            var animals = "none";
+            var animals = "--";
         }
 
         if ("conservation" in targetVisit && "compliant" in targetVisit.conservation){
-            var conservation = targetVisit.conservation.compliant;
+            var conservation = (targetVisit.conservation.compliant ? truePng : falsePng);
         }
         else{
-            var conservation = "none";
+            var conservation = "--";
         }
 
         if ("recycle" in targetVisit && "compliant" in targetVisit.recycle){
-            var recycle = targetVisit.recycle.compliant;
+            var recycle = (targetVisit.recycle.compliant ? truePng : falsePng);
         }
         else{
-            var recycle = "none";
+            var recycle = "--";
         }
 
         if ("structures" in targetVisit && "compliant" in targetVisit.structures){
-            var structures = targetVisit.structures.compliant;
+            var structures = (targetVisit.structures.compliant ? truePng : falsePng);
         }
         else{
-            var structures = "none";
+            var structures = "--";
         }
 
-        var totalCompliance = animals && conservation && recycle && structures;
+        var totalCompliance = ((animals == truePng) && (conservation == truePng) && (recycle == truePng) && (structures == truePng)) ? truePng : falsePng;
 
         var entry = {
             // values from visit
@@ -100,15 +113,27 @@ function generateData(data){
             "Family Name"        : familyName,
             "Community"         : community,
             "Last Visit Date"     : date,
-            "Total Compliance"   : totalCompliance,
-            "Animals"           : animals,
-            "Conservation"      : conservation,
-            "Recycle"           : recycle,
-            "Structures"        : structures,
+            "Total Compliance"   : (totalCompliance == truePng),
+            "Animals"           : (animals == truePng),
+            "Conservation"      : (conservation == truePng),
+            "Recycle"           : (recycle == truePng),
+            "Structures"        : (structures == truePng),
         }
 
-        data.push(entry);
-        csvData.push(csvEntry);
+	if (empty) {
+            empties.push([entry, csvEntry]);
+	}
+	else {
+            data.push(entry);
+            csvData.push(csvEntry);
+        }
+
+        empty = false;
+    }
+
+    for (var i = 0; i < empties.length; i++) {
+        data.push(empties[i][0]);
+        csvData.push(empties[i][1]);
     }
 
     // load data into csv file link
@@ -128,8 +153,10 @@ function constructTable(data){
           {
               "className":      'details-control',
               "orderable":      false,
-              "data":           null,
               "defaultContent": ''
+/*	      "render" : function ( data, type, row) {
+		return '<img height="20px" width="20px" src="'+data[9]+'"/>';
+	      }*/
           },
           { data: 'familyID' },
           { data: 'familyName' },
