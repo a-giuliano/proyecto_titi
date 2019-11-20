@@ -8,6 +8,8 @@ window.onload = function main(){
     promise2.then(assignFunctionality);
 }
 
+var imgPrefix = '<img height="20px" width="20px" style="display:block; margin-left:auto; margin-right:auto;" src="img/';
+
 function generateData(data){
     var families = data.val();
     var keys = Object.keys(families);
@@ -17,9 +19,6 @@ function generateData(data){
 
     var empties = [];
     var empty = false;
-
-    var truePng = '<img height="20px" width="20px" src="img/check.png"/>';
-    var falsePng = '<img height="20px" width="20px" src="img/reject.png/>';
 
     for(var i = 0; i < keys.length; i++){
         var family = families[keys[i]];
@@ -65,34 +64,34 @@ function generateData(data){
 
         // determine compliance of each factor
         if ("animals" in targetVisit && "compliant" in targetVisit.animals){
-	    var animals = (targetVisit.animals.compliant ? truePng : falsePng);
+	    var animals = targetVisit.animals.compliant;
         }
         else{
             var animals = "--";
         }
 
         if ("conservation" in targetVisit && "compliant" in targetVisit.conservation){
-            var conservation = (targetVisit.conservation.compliant ? truePng : falsePng);
+            var conservation = targetVisit.conservation.compliant;
         }
         else{
             var conservation = "--";
         }
 
         if ("recycle" in targetVisit && "compliant" in targetVisit.recycle){
-            var recycle = (targetVisit.recycle.compliant ? truePng : falsePng);
+            var recycle = targetVisit.recycle.compliant;
         }
         else{
             var recycle = "--";
         }
 
         if ("structures" in targetVisit && "compliant" in targetVisit.structures){
-            var structures = (targetVisit.structures.compliant ? truePng : falsePng);
+            var structures = targetVisit.structures.compliant;
         }
         else{
             var structures = "--";
         }
 
-        var totalCompliance = ((animals == truePng) && (conservation == truePng) && (recycle == truePng) && (structures == truePng)) ? truePng : falsePng;
+        var totalCompliance = animals && conservation && recycle && structures;
 
         var entry = {
             // values from visit
@@ -109,15 +108,15 @@ function generateData(data){
         };
 
         var csvEntry = {
-            "Family ID"          : familyID,
-            "Family Name"        : familyName,
+            "Family ID"         : familyID,
+            "Family Name"       : familyName,
             "Community"         : community,
-            "Last Visit Date"     : date,
-            "Total Compliance"   : (totalCompliance == truePng),
-            "Animals"           : (animals == truePng),
-            "Conservation"      : (conservation == truePng),
-            "Recycle"           : (recycle == truePng),
-            "Structures"        : (structures == truePng),
+            "Last Visit Date"   : date,
+            "Total Compliance"  : totalCompliance,
+            "Animals"           : animals,
+            "Conservation"      : conservation,
+            "Recycle"           : recycle,
+            "Structures"        : structures,
         }
 
 	if (empty) {
@@ -154,19 +153,37 @@ function constructTable(data){
               "className":      'details-control',
               "orderable":      false,
               "defaultContent": ''
-/*	      "render" : function ( data, type, row) {
-		return '<img height="20px" width="20px" src="'+data[9]+'"/>';
-	      }*/
           },
           { data: 'familyID' },
           { data: 'familyName' },
           { data: 'community' },
           { data: 'lastVisitDate' },
-          { data: 'totalCompliance' },
-          { data: 'animals' },
-          { data: 'conservation' },
-          { data: 'recycle' },
-          { data: 'structures' }
+          
+	  { data: 'totalCompliance',
+            render: function  ( check ) {
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+	    },
+	  },
+	  { data: 'animals',
+	    render: function  ( check ) {
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+	    },  
+	  },
+          { data: 'conservation',
+	    render: function  ( check ) {
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+	    },
+	  },
+          { data: 'recycle',
+	    render: function  ( check ) {
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+	    },
+          },
+          { data: 'structures',
+	    render: function  ( check ) {
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+	    },
+	  }
       ]
     });
   
