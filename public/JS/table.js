@@ -358,5 +358,13 @@ function getDateColor(snap){
   
 }
 
-
-
+function change() {
+    var language = document.getElementById("language").innerHTML;
+    alert(language);
+    if (language == "English") {
+	document.getElementById("language").innerHTML = "Espanol";
+    }
+    else {
+	document.getElementById("language").innerHTML = "English";
+    }
+}
