@@ -2,24 +2,22 @@
 <html>
   
 <head>
-  <title>Proyecto Titi - Table</title>
-  
-  <!-- Data Table CSS -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.4/css/buttons.dataTables.min.css">
+  <title>Proyecto Titi - Summary</title>
   
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <!-- Material Design Bootstrap -->
+  <link href="CSS/mdb.min.css" rel="stylesheet">
   
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="CSS/table.css">  
+  <link rel="stylesheet" href="CSS/summary.css">  
   <link rel="stylesheet" href="CSS/navbar.css">
-  <link rel="stylesheet" href="CSS/mdb.min.css">
   <link rel="stylesheet" href="CSS/footer.css">
-
+    
 </head>
 
-<body>
+<body>    
     <!-- Nav Bar -->
     <nav class="navbar navbar-expand-lg navbar-light static-top">
             <a class="navbar-brand" href="#">
@@ -44,35 +42,39 @@
             </li>
           </ul>
       </div>
-    </nav>    
+    </nav>
 
-    <div class="pageContent">
-    <a id="csv-link">Download table as csv</a>
-    
-    <table id="myTable" class="display"> 
-      <thead>
-        <tr>
-          <th></th>
-          <th id="num">Number</th>
-          <th id="famName">Family Name</th>
-          <th id="com" >Community</th>
-          <th id="visit">Last Visit</th>
-          <th id="totComp">Total Compliance</th>
-          <th id="animal">Animals</th>
-          <th id="cons" >Conservation</th>
-          <th id="rec">Recycling</th>
-          <th id="struct">Structures</th>
-        </tr>
-      </thead>
-    </table>
+    <!-- Cards -->
+    <div class="cards">
+	<div class="card" id="nfmailies-card">
+	    <h1 id="numFamilies"></h1>
+	    <p id="NFCLabel">Number of families living in compliance</p>
+	</div>
+	<div class="card" id="compliant-percentage-card">
+	    <h1 id="perctFamilies"></h1>
+            <p id="CPCLabel">Percentage of families living in compliance</p>
+	</div>
+	<div class="card" id="total-visits-card">
+	    <h1 id="numVisits"></h1>
+            <p id="NTVLabel">Total Number of Visits Conducted</p>
+	</div>
+	<div class="card" id="ncommunities">
+	    <h1 id="numComm"></h1>
+            <p id="NTCLabel">Total Number of Communities</p>
+	</div>
     </div>
+
+    <p class="header" id="commGraphHeader">Number of Families in Each Community</p>
+    <canvas class="chart" id="doughnutChart"></canvas>
+  
+    <footer class="page-footer font-small">
+      <button id="language" onClick="change();">Espanol</button>
+    </footer>
+
   </div>
-
-  <footer class="page-footer font-small">
-    <button id="language" onClick="change(); main();">Espanol</button>
-  </footer>
-
+  
   <!--------------- Scripts --------------->
+
 
   <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
@@ -86,15 +88,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-  <!--PAPA PARSE SCRIPT -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="JS/mdb.min.js"></script>
 
   <!-- Main Scripts -->
-  <script src="JS/table.js"></script>
+  <script src="JS/summary.js"></script>
   <script src="JS/logout.js"></script>
-  <script src="JS/mdb.min.js"></script>
   <script src="JS/lang.js"></script>
-  <script src="JS/translateTable.js"></script>
+  <script src="JS/translateSum.js"></script>
 </body>
     
 </html>

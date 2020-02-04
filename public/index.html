@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <title>Proyecto Titi - Table View</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, maximum-scale=1">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="CSS/login.css">  
+
+</head>
+
+<body>
+
+  <?php
+    session_start();
+    $_SESSION['lang'] = 1;
+  ?>
+  <div id="login-box">
+    <img src="img/logo.png">
+    <form id="login-form">
+      <label for="login-email">Email</label>
+      <input type="email" id="login-email" required>
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" required>
+      <input class="submit" type="submit" value="Login"></button>
+    </form>
+  </div>
+  
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+  <script src="JS/firebase.js"></script>
+
+  <!-- Main Scripts -->
+  <script src="JS/login.js"></script>
+    
+</body>
+    
+</html>

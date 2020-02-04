@@ -146,8 +146,33 @@ function generateData(data){
 
 function constructTable(data){
     var table;
+    if(localStorage.getItem("spanLang") == "true"){
     table = $('#myTable').DataTable({
-      data: data,
+	data: data,
+	"language": {
+        "sProcessing":    "Procesando...",
+        "sLengthMenu":    "Mostrar _MENU_ registros",
+        "sZeroRecords":   "No se encontraron resultados",
+        "sEmptyTable":    "Ningún dato disponible en esta tabla",
+        "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":   "",
+        "sSearch":        "Buscar:",
+        "sUrl":           "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":    "Último",
+            "sNext":    "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        }
+    },
       columns: [
           {
               "className":      'details-control',
@@ -185,7 +210,48 @@ function constructTable(data){
 	    },
 	  }
       ]
-    });
+    });}
+    else{
+	table = $('#myTable').DataTable({
+        data: data,
+	columns: [
+          {
+              "className":      'details-control',
+              "orderable":      false,
+              "defaultContent": ''
+          },
+          { data: 'familyID' },
+          { data: 'familyName' },
+          { data: 'community' },
+          { data: 'lastVisitDate' },
+
+          { data: 'totalCompliance',
+            render: function  ( check ) {
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+            },
+          },
+          { data: 'animals',
+            render: function  ( check ) {
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+            },
+          },
+          { data: 'conservation',
+            render: function  ( check ) {
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+            },
+          },
+          { data: 'recycle',
+            render: function  ( check ) {
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+            },
+          },
+          { data: 'structures',
+            render: function  ( check ) {
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+            },
+          }
+      ]
+    });}	
   
     return table;
   
@@ -210,7 +276,9 @@ function assignFunctionality(table){
 }
 
 function format ( d ) {
-    var html = `
+    var lang = localStorage.getItem("spanLang");
+    var html;
+    html = (lang != "true") ? `
     <div id="details">
         <h1 id="details-header">Details</h1>
         <p>Click the cells on the right to get specifics for each visit</p>
@@ -218,10 +286,23 @@ function format ( d ) {
     <table id="visits-table" >
         <tr>
             <th class="category"></th>
-            <th class="category">Animals</th>
-            <th class="category">Conservation</th>
+            <th class="category" id="animal">Animals</th>
+            <th class="category" id="cons">Conservation</th>
             <th class="category">Recycling</th>
             <th class="category">Structures</th>
+        </tr>
+    ` :
+    `<div id="details">
+        <h1 id="details-header">Detalles</h1>
+        <p>Haga clic en las celdas a la derecha para obtener información específica para cada visita.</p>
+    </div>
+    <table id="visits-table" >
+     i   <tr>
+            <th class="category"></th>
+            <th class="category" id="animal">Animales</th>
+            <th class="category" id="cons">Conservacion</th>
+            <th class="category">Reciclaje</th>
+            <th class="category">Estructuras</th>
         </tr>
     `;
     for(var visit in d.visits){
@@ -257,24 +338,33 @@ function format ( d ) {
 }
 
 function showDetails(cell, data, type){
-    var html = `<h1 id="details-header">Details</h1>`;
+    var lang = localStorage.getItem("spanLang");
+
+    var html = (lang != "true") ? `<h1 id="details-header">Details</h1>` : `<h1 id="details-header">Detalles</h1>`;
     if(document.getElementsByClassName('clicked')[0]) document.getElementsByClassName('clicked')[0].className = "click-cell";
     cell.className = 'clicked';
     if(type == 'animal'){
-        html += `<h2>Domestic:</h2><ul>`
+        html += (lang != "true") ? `<h2>Domestic:</h2><ul>` : `<h2>Doméstico:</h2><ul>`;
         for(var animal in data['domestic']){
-            html += `
+            html += (lang != "true") ?  `
                 <li>
                     <b>Type</b>: ${data['domestic'][animal]['type']},
                     <b>Count</b>: ${data['domestic'][animal]['amount']},
                     <b>Compliant</b>: ${data['domestic'][animal]['compliant']}
                 </li>
+            ` :
+	    `
+                <li>
+                    <b>Tipo</b>: ${data['domestic'][animal]['type']},
+                    <b>Cantidad</b>: ${data['domestic'][animal]['amount']},
+                    <b>Complaciente</b>: ${data['domestic'][animal]['compliant']}
+                </li>
             `;
         }
         html += `</ul>`;
-        html += `<h2>Wild:</h2><ul>`
+        html += (lang != "true") ? `<h2>Wild:</h2><ul>` : `<h2>Silvestres:</h2><ul>`;
         for(var animal in data['wild']){
-            html += `
+            html += (lang != "true") ? `
                 <li>
                     <b>Classification</b>: ${data['wild'][animal]['classification']}, 
                     <b>Type</b>: ${data['wild'][animal]['type']},
@@ -283,29 +373,55 @@ function showDetails(cell, data, type){
                     <b>Marking</b>: ${data['wild'][animal]['marking']},
                     <b>Compliant</b>: ${data['wild'][animal]['compliant']}
                 </li>
-            `;
+            ` :
+	    `
+                <li>
+                    <b>Classificacion</b>: ${data['wild'][animal]['classification']},
+                    <b>Tipo</b>: ${data['wild'][animal]['type']},
+                    <b>Funcion</b>: ${data['wild'][animal]['function']},
+                    <b>Origen</b>: ${data['wild'][animal]['origin']},
+                    <b>Calificación</b>: ${data['wild'][animal]['marking']},
+                    <b>Complaciente</b>: ${data['wild'][animal]['compliant']}
+                </li>
+            `
+	    ;
         }
         html += `</ul>`;
     }
     else if(type == 'conservation'){
-        html += `<p><b>Property hectares: </b>${data['area']}</p>`;
+        html += (lang!= "true") ? `<p><b>Acres: </b>${data['area']}</p>` : `<p><b>Hectareas: </b>${data['area']}</p>`;
     }
     else if(type == 'recycle'){
-        html += `
+        html += (lang!= "true") ? `
             <p><b>Recycle delivery:</b> ${data['recycle_deliver']}</p>
             <p><b>Does recycle:</b> ${data['doRecycle']}</p>
-        `;
+        ` :
+	`
+            <p><b>Entrega de Reciclaje:</b> ${data['recycle_deliver']}</p>
+            <p><b>Recicla?:</b> ${data['doRecycle']}</p>
+        `
+	;
     }
     else if(type == 'structures'){
         for(var structure in data['construction']){
-            html += `
+            html += (lang != "true") ? `
                 <li>
                     <b>Name</b>: ${data['construction'][structure]['name']},
                     <b>Size</b>: ${data['construction'][structure]['size']},
                     <b>Type</b>: ${data['construction'][structure]['type']},
                     <b>Function</b>: ${data['construction'][structure]['function']},
                     <b>Condition</b>: ${data['construction'][structure]['condition']},
-                    <b>Comlpiant</b>: ${data['construction'][structure]['compliant']}
+                    <b>Compliant</b>: ${data['construction'][structure]['compliant']}
+                </li>
+            ` :
+	    `
+                <li>
+                    <b>Nombre</b>: ${data['construction'][structure]['name']},
+                    <b>Talla</b>: ${data['construction'][structure]['size']},
+                    <b>Tipo</b>: ${data['construction'][structure]['type']},
+                    <b>Funcion</b>: ${data['construction'][structure]['function']},
+                    <b>Condicion</b>: ${data['construction'][structure]['condition']},
+                    <b>Complaciente</b>: ${data['construction'][structure]['compliant']}
                 </li>
             `;
         }
@@ -356,15 +472,4 @@ function getDateColor(snap){
       return "Red";
   }
   
-}
-
-function change() {
-    var language = document.getElementById("language").innerHTML;
-    alert(language);
-    if (language == "English") {
-	document.getElementById("language").innerHTML = "Espanol";
-    }
-    else {
-	document.getElementById("language").innerHTML = "English";
-    }
 }

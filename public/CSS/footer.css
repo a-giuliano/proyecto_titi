@@ -1,0 +1,22 @@
+footer {
+  background-color: #845A6D;
+  margin-top: 15px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  text-align: right;
+}
+
+#language {
+    height: 30px;
+    width: 70px;
+    margin-top: 4px;
+    margin-right: 20px;
+    background-color: #A7CAB1;
+    color: black;
+    text-align: center;
+    border: 1px solid black;
+    box-shadow: 1px 1px 1px black;
+}
+

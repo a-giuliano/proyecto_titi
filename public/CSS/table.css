@@ -1,0 +1,110 @@
+/*
+Blue: 	     #4F70CF
+Turquoise:   #13BBAE
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,600,700');
+
+body{
+  background: #fff;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+input, button{
+  font-family: 'Open Sans', sans-serif;
+}
+
+.pageContent {
+    margin: 10px 40px;
+}
+
+.main-div{
+  width: 20%;
+  margin: 0px auto;
+  margin-top: 150px;
+  margin-left: 15px;
+  padding: 20px;
+  display: block;
+}
+
+.loggedin-div{
+  display: block;
+}
+
+.main-div input{
+  display: block;
+  border: 1px solid #5d8ffc;
+  border-radius: 5px;
+  background: #fff;
+  padding: 15px;
+  outline: none;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.main-div input:focus{
+  border: 1px solid #777;
+}
+
+.main-div button, .loggedin-div button{
+  background: #5d8ffc;
+  color: #fff;
+  border 0px;
+  border-radius: 5px;
+  padding: 15px;
+  display: block;
+  width: 100%;
+  transition: 0.3s;
+}
+
+.main-div button:hover, .loggedin-div button:hover{
+  background: #fff;
+  color: #5d8ffc;
+  border: 1px solid #5d8ffc;
+  cursor: pointer;
+}
+
+td.details-control {
+  background: url('../img/plus.png') no-repeat center center; 
+  cursor: pointer;
+}
+tr.shown td.details-control {
+  background: url('../img/minus.png') no-repeat center center; 
+}
+
+#details-header{
+  color: #5d8ffc;
+}
+
+#details{
+  width: 60%;
+  padding: 0;
+  margin: 0 10px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#visits-table{
+  width: 35%;
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+}
+
+.visit-number, .category{
+  background: #5d8ffc;
+  color: #fff;
+  font-weight: 700;
+  border: none !important;
+}
+
+.click-cell{
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.clicked{
+  font-weight: 700;
+}
