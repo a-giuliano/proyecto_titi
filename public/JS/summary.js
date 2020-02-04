@@ -68,7 +68,7 @@ window.onload = function main(){
       }
 
       if ("basicData" in targetVisit && "community" in targetVisit.basicData && targetVisit.basicData.community != "") {
-    	if(targetVisit.basicData.community.toLowerCase() in communities){
+    	if(titleCase(removeAccents(targetVisit.basicData.community)) in communities){
 	    communities[titleCase(removeAccents(targetVisit.basicData.community))]++;    	    
 	}
 	else {
