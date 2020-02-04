@@ -297,7 +297,7 @@ function format ( d ) {
         <p>Haga clic en las celdas a la derecha para obtener información específica para cada visita.</p>
     </div>
     <table id="visits-table" >
-     i   <tr>
+        <tr>
             <th class="category"></th>
             <th class="category" id="animal">Animales</th>
             <th class="category" id="cons">Conservacion</th>
@@ -398,7 +398,7 @@ function showDetails(cell, data, type){
         ` :
 	`
             <p><b>Entrega de Reciclaje:</b> ${data['recycle_deliver']}</p>
-            <p><b>Recicla?:</b> ${data['doRecycle']}</p>
+            <p><b>Hace Reciclar:</b> ${data['doRecycle']}</p>
         `
 	;
     }
