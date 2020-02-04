@@ -69,10 +69,10 @@ window.onload = function main(){
 
       if ("basicData" in targetVisit && "community" in targetVisit.basicData && targetVisit.basicData.community != "") {
     	if(targetVisit.basicData.community.toLowerCase() in communities){
-	    communities[targetVisit.basicData.community.toLowerCase()]++;    	    
+	    communities[titleCase(removeAccents(targetVisit.basicData.community))]++;    	    
 	}
 	else {
-	    communities[targetVisit.basicData.community.toLowerCase()] = 1;
+	    communities[titleCase(removeAccents(targetVisit.basicData.community))] = 1;
 	    ncommunities++;
 	}
       }
@@ -97,10 +97,11 @@ window.onload = function main(){
 	    backgroundColor: $.map(communities, function(value, key) {return '#'+Math.floor(Math.random()*16777215).toString(16)}),
         }]
       },
-
-     options: {
-        responsive: true
+      chartOptions: {
+	responsive: true,
+	maintainAspectRatio: false,
       }
+
    });
   });
 }

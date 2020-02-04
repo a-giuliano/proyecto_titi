@@ -35,7 +35,7 @@ function generateData(data){
 
 	// basic data
         var familyName = targetVisit.basicData.name;
-        var community = targetVisit.basicData.community;
+        var community = titleCase(removeAccents(targetVisit.basicData.community));
       
 	if (familyName == "") {
 		empty = true;

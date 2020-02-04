@@ -240,3 +240,4 @@ function getContent(snap){
   return contentString;
   
 }
+
