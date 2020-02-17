@@ -6,13 +6,19 @@ var rootRef = database.ref().child("families");
 // main map
 var map;
 
+<<<<<<< HEAD
 var lang;
 
+=======
+>>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
 window.onload = main;
 
 function main(){
     
+<<<<<<< HEAD
     lang = localStorage.getItem("spanLang");
+=======
+>>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
     initMap();
     
     rootRef.on('child_added', snap =>{
@@ -132,6 +138,7 @@ function getComplianceDict(snap){
     
     var totalCompliance = animals && conservation && recycle && structures;
 
+<<<<<<< HEAD
     var complianceDict;
     if(lang != "true") {
 	complianceDict = {
@@ -150,6 +157,14 @@ function getComplianceDict(snap){
             "estructuras": structures,
             "total": totalCompliance
         }
+=======
+    var complianceDict = {
+        "animals": animals,
+        "conservation": conservation,
+        "recycle": recycle,
+        "structures": structures,
+        "total": totalCompliance
+>>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
     }
     
     return complianceDict;
@@ -191,7 +206,10 @@ function getTimeDelay(snap){
 }
 
 function getContent(snap){
+<<<<<<< HEAD
 
+=======
+>>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
   // dictionary structure of each of the visits 
   var visits = JSON.parse(JSON.stringify(snap.child("visits").val()));
     
@@ -208,10 +226,17 @@ function getContent(snap){
 
   var complianceString = '';
   if (complianceDict['total']){
+<<<<<<< HEAD
       complianceString = (lang != "true") ? 'Compliant' : 'Complaciente';
   }
   else{
       complianceString = (lang != "true") ? 'Compliant' : 'No Complaciente: ';
+=======
+      complianceString = 'Compliant';
+  }
+  else{
+      complianceString = 'Noncompliant:';
+>>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
       for(var key in complianceDict){
           if(key == 'total'){
               continue;
@@ -222,6 +247,7 @@ function getContent(snap){
       }
   }
   
+<<<<<<< HEAD
   var contentString;
   if (lang != "true") {
     contentString = '<div class="infoWindow">'+
@@ -241,3 +267,14 @@ function getContent(snap){
   
 }
 
+=======
+  var contentString = '<div class="infoWindow">'+
+                      '<h1>' + name + '</h1>'+
+                      '<h2> Visited <b>' + getTimeDelay(snap) + '</b> days ago</h2>'+
+                      '<h2>' + complianceString + '</h2>'+
+                      '</div>'
+  
+  return contentString;
+  
+}
+>>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f

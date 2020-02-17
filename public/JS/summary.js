@@ -68,11 +68,19 @@ window.onload = function main(){
       }
 
       if ("basicData" in targetVisit && "community" in targetVisit.basicData && targetVisit.basicData.community != "") {
+<<<<<<< HEAD
     	if(titleCase(removeAccents(targetVisit.basicData.community)) in communities){
 	    communities[titleCase(removeAccents(targetVisit.basicData.community))]++;    	    
 	}
 	else {
 	    communities[titleCase(removeAccents(targetVisit.basicData.community))] = 1;
+=======
+    	if(targetVisit.basicData.community.toLowerCase() in communities){
+	    communities[targetVisit.basicData.community.toLowerCase()]++;    	    
+	}
+	else {
+	    communities[targetVisit.basicData.community.toLowerCase()] = 1;
+>>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
 	    ncommunities++;
 	}
       }
@@ -82,10 +90,33 @@ window.onload = function main(){
     console.log(communities);
     compliantPercentage = Math.round((ncompliant / nfamilies) * 100);
 
+<<<<<<< HEAD
     document.getElementById("numFamilies").innerHTML = nfamilies;
     document.getElementById("perctFamilies").innerHTML = compliantPercentage;
     document.getElementById("numVisits").innerHTML = nTotalVisits;
     document.getElementById("numComm").innerHTML = ncommunities;
+=======
+    nfamiliesCard.innerHTML = `
+      <h1>${nfamilies}</h1>
+      <p>Number of families living in compliance</p>
+    `;
+
+    compliantPercentageCard.innerHTML = `
+      <h1>${compliantPercentage}%</h1>
+      <p>Percentage of families living in compliance</p>
+    `;
+
+    totalVisitsCard.innerHTML = `
+      <h1>${nTotalVisits}</h1>
+      <p>Total number of visits conducted</p>
+    `;
+
+    totalCommunities.innerHTML = `
+      <h1>${ncommunities}</h1>
+      <p>Total number of communities</p>
+    `;
+
+>>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
 
     var ctxD = document.getElementById("doughnutChart").getContext('2d');
     var myLineChart = new Chart(ctxD, {
@@ -97,11 +128,18 @@ window.onload = function main(){
 	    backgroundColor: $.map(communities, function(value, key) {return '#'+Math.floor(Math.random()*16777215).toString(16)}),
         }]
       },
+<<<<<<< HEAD
       chartOptions: {
 	responsive: true,
 	maintainAspectRatio: false,
       }
 
+=======
+
+     options: {
+        responsive: true
+      }
+>>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
    });
   });
 }
