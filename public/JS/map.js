@@ -219,7 +219,6 @@ function getContent(snap){
           else if(complianceDict[key] == false){
               complianceString += ' ' + key;
           }
-      }
   }
   
   var contentString;

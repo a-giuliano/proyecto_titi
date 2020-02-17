@@ -82,34 +82,11 @@ window.onload = function main(){
     console.log(communities);
     compliantPercentage = Math.round((ncompliant / nfamilies) * 100);
 
-<<<<<<< HEAD
     document.getElementById("numFamilies").innerHTML = nfamilies;
     document.getElementById("perctFamilies").innerHTML = compliantPercentage;
     document.getElementById("numVisits").innerHTML = nTotalVisits;
     document.getElementById("numComm").innerHTML = ncommunities;
-=======
-    nfamiliesCard.innerHTML = `
-      <h1>${nfamilies}</h1>
-      <p>Number of families living in compliance</p>
-    `;
-
-    compliantPercentageCard.innerHTML = `
-      <h1>${compliantPercentage}%</h1>
-      <p>Percentage of families living in compliance</p>
-    `;
-
-    totalVisitsCard.innerHTML = `
-      <h1>${nTotalVisits}</h1>
-      <p>Total number of visits conducted</p>
-    `;
-
-    totalCommunities.innerHTML = `
-      <h1>${ncommunities}</h1>
-      <p>Total number of communities</p>
-    `;
-
->>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
-
+    
     var ctxD = document.getElementById("doughnutChart").getContext('2d');
     var myLineChart = new Chart(ctxD, {
       type: 'doughnut',
@@ -120,18 +97,10 @@ window.onload = function main(){
 	    backgroundColor: $.map(communities, function(value, key) {return '#'+Math.floor(Math.random()*16777215).toString(16)}),
         }]
       },
-<<<<<<< HEAD
       chartOptions: {
 	responsive: true,
 	maintainAspectRatio: false,
       }
-
-=======
-
-     options: {
-        responsive: true
-      }
->>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
    });
   });
 }
