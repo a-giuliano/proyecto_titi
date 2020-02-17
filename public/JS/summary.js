@@ -68,19 +68,11 @@ window.onload = function main(){
       }
 
       if ("basicData" in targetVisit && "community" in targetVisit.basicData && targetVisit.basicData.community != "") {
-<<<<<<< HEAD
     	if(titleCase(removeAccents(targetVisit.basicData.community)) in communities){
 	    communities[titleCase(removeAccents(targetVisit.basicData.community))]++;    	    
 	}
 	else {
 	    communities[titleCase(removeAccents(targetVisit.basicData.community))] = 1;
-=======
-    	if(targetVisit.basicData.community.toLowerCase() in communities){
-	    communities[targetVisit.basicData.community.toLowerCase()]++;    	    
-	}
-	else {
-	    communities[targetVisit.basicData.community.toLowerCase()] = 1;
->>>>>>> e24ee8a5abe66a1426101fe339930d4573fd8d8f
 	    ncommunities++;
 	}
       }
