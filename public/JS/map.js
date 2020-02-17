@@ -132,7 +132,6 @@ function getComplianceDict(snap){
     
     var totalCompliance = animals && conservation && recycle && structures;
 
-<<<<<<< HEAD
     var complianceDict;
     if(lang != "true") {
 	complianceDict = {
