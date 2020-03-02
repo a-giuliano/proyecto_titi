@@ -1,9 +1,15 @@
 "use strict";
 
 var ref = database.ref("families");
+var promise = ref.once('value').then(generateData);
 
 window.onload = function main(){
-    var promise = ref.once('value').then(generateData);
+    var promise2 = promise.then(constructTable)
+    promise2.then(assignFunctionality);
+}
+
+function reloadTable(){
+    $('#myTable').DataTable().destroy();
     var promise2 = promise.then(constructTable)
     promise2.then(assignFunctionality);
 }
@@ -186,27 +192,27 @@ function constructTable(data){
           
 	  { data: 'totalCompliance',
             render: function  ( check ) {
-		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
 	    },
 	  },
 	  { data: 'animals',
 	    render: function  ( check ) {
-		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
 	    },  
 	  },
           { data: 'conservation',
 	    render: function  ( check ) {
-		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
 	    },
 	  },
           { data: 'recycle',
 	    render: function  ( check ) {
-		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
 	    },
           },
           { data: 'structures',
 	    render: function  ( check ) {
-		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+		return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
 	    },
 	  }
       ]
@@ -227,27 +233,27 @@ function constructTable(data){
 
           { data: 'totalCompliance',
             render: function  ( check ) {
-                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
             },
           },
           { data: 'animals',
             render: function  ( check ) {
-                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
             },
           },
           { data: 'conservation',
             render: function  ( check ) {
-                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
             },
           },
           { data: 'recycle',
             render: function  ( check ) {
-                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
             },
           },
           { data: 'structures',
             render: function  ( check ) {
-                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
+                return ( (check == "--") ? imgPrefix+'dash.png"/>' : (check == true ? imgPrefix+'check.png"/>' : imgPrefix+'false.png"/>') );
             },
           }
       ]
@@ -267,8 +273,10 @@ function assignFunctionality(table){
             row.child.hide();
             tr.removeClass('shown');
         }
-        else {
+        else if (row.data() != undefined){
             // Open this row
+	    console.log(row.data());
+	    console.log(row);
             row.child( format(row.data()) ).show();
             tr.addClass('shown');
         }
@@ -344,7 +352,7 @@ function showDetails(cell, data, type){
     if(document.getElementsByClassName('clicked')[0]) document.getElementsByClassName('clicked')[0].className = "click-cell";
     cell.className = 'clicked';
     if(type == 'animal'){
-        html += (lang != "true") ? `<h2>Domestic:</h2><ul>` : `<h2>Doméstico:</h2><ul>`;
+        /*html += (lang != "true") ? `<h2>Domestic:</h2><ul>` : `<h2>Doméstico:</h2><ul>`;
         for(var animal in data['domestic']){
             html += (lang != "true") ?  `
                 <li>
@@ -360,10 +368,11 @@ function showDetails(cell, data, type){
                     <b>Complaciente</b>: ${data['domestic'][animal]['compliant']}
                 </li>
             `;
-        }
+        }*/
         html += `</ul>`;
         html += (lang != "true") ? `<h2>Wild:</h2><ul>` : `<h2>Silvestres:</h2><ul>`;
         for(var animal in data['wild']){
+	    console.log(data['wild']);
             html += (lang != "true") ? `
                 <li>
                     <b>Classification</b>: ${data['wild'][animal]['classification']}, 
@@ -385,6 +394,17 @@ function showDetails(cell, data, type){
                 </li>
             `
 	    ;
+
+	    for(var img in data['wild'][animal]['images']){
+		console.log(data['wild'][animal]['images'][img].toString());
+		html += `<img src="${data['wild'][animal]['images'][img]}" height="100" width="100">`;
+
+		/*var httpsReference = storage.refFromURL(data['wild'][animal]['images'][img]);
+
+		httpsReference.getDownloadURL().then(function(url) {
+		    html += `<img src="url" height="100" width="100">`;
+		})*/		
+	    }
         }
         html += `</ul>`;
     }
