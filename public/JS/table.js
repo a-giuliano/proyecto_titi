@@ -275,8 +275,6 @@ function assignFunctionality(table){
         }
         else if (row.data() != undefined){
             // Open this row
-	    console.log(row.data());
-	    console.log(row);
             row.child( format(row.data()) ).show();
             tr.addClass('shown');
         }
@@ -370,7 +368,11 @@ function showDetails(cell, data, type){
             `;
         }*/
         html += `</ul>`;
-        html += (lang != "true") ? `<h2>Wild:</h2><ul>` : `<h2>Silvestres:</h2><ul>`;
+        if(data['wild'] != undefined) { 
+	    html += (lang != "true") ? `<h2>Wild:</h2><ul>` : `<h2>Silvestres:</h2><ul>`; 
+	} else {
+	    html += (lang != "true") ? `<h2>No Wild Animals to Log.</h2><ul>` : `<h2>No Animales Silvestres Para Registrar</h2><ul>`; 
+	}
         for(var animal in data['wild']){
 	    console.log(data['wild']);
             html += (lang != "true") ? `
@@ -397,7 +399,7 @@ function showDetails(cell, data, type){
 
 	    for(var img in data['wild'][animal]['images']){
 		console.log(data['wild'][animal]['images'][img].toString());
-		html += `<img src="${data['wild'][animal]['images'][img]}" height="100" width="100">`;
+		html += `<img style="display: inline-block" src="${data['wild'][animal]['images'][img]}" height="100" width="100">`;
 
 		/*var httpsReference = storage.refFromURL(data['wild'][animal]['images'][img]);
 
