@@ -6,7 +6,6 @@
 }
 
 .nav-item {
-    width: 160px;
     text-align: center;
     font-size: 18px;
     color: black;
@@ -15,3 +14,5 @@
 .nav-item:hover {
     font-weight: bold;
 }
+
+

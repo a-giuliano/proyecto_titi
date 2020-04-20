@@ -11,7 +11,7 @@
   <link href="CSS/mdb.min.css" rel="stylesheet">
   
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="CSS/summary.css">  
+  <link rel="stylesheet" href="CSS/summary-tree.css">  
   <link rel="stylesheet" href="CSS/navbar.css">
   <link rel="stylesheet" href="CSS/footer.css">
     
@@ -50,31 +50,7 @@
       </div>
     </nav>
 
-    <!-- Cards -->
-    <div class="cards">
-	<div class="card" id="nfmailies-card">
-	    <h1 id="numFamilies"></h1>
-	    <p id="NFCLabel">Number of families living in compliance</p>
-	</div>
-	<div class="card" id="compliant-percentage-card">
-	    <h1 id="perctFamilies"></h1>
-            <p id="CPCLabel">Percentage of families living in compliance</p>
-	</div>
-	<div class="card" id="total-visits-card">
-	    <h1 id="numVisits"></h1>
-            <p id="NTVLabel">Total Number of Visits Conducted</p>
-	</div>
-	<div class="card" id="ncommunities">
-	    <h1 id="numComm"></h1>
-            <p id="NTCLabel">Total Number of Communities</p>
-	</div>
-    </div>
-
-    <p class="header" id="commGraphHeader">Number of Families in Each Community</p>
-    <div style="text-align:center">
-	<div class="graphs" style="display:inline-block; width: 1200px; height: 1200px;"><canvas baseChart class="chart" id="doughnutChart"></canvas></div>
-    </div>
-  
+      
     <footer class="page-footer font-small">
       <button id="language" onClick="change();">Espanol</button>
     </footer>
@@ -103,7 +79,7 @@
   <script src="JS/summary.js"></script>
   <script src="JS/logout.js"></script>
   <script src="JS/lang.js"></script>
-  <script src="JS/translateSum.js"></script>
+  <script src="JS/translateTreeSum.js"></script>
   <script src="JS/wordManipulations.js"></script>
 </body>
     
