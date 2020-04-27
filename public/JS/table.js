@@ -4,6 +4,9 @@ var ref = database.ref("families");
 var promise = ref.once('value').then(generateData);
 
 window.onload = function main(){
+    if(sessionStorage.getItem("user") == null) {
+	window.location.href = "https://proyectotiti-6da63.firebaseapp.com/index.html";
+    }
     var promise2 = promise.then(constructTable)
     promise2.then(assignFunctionality);
 }

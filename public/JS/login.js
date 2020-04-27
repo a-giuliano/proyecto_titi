@@ -3,6 +3,7 @@ firebase.auth().onAuthStateChanged(function(user){
     // User is signed in
     localStorage.setItem("spanLang", "true");
     console.log('success');
+    sessionStorage.setItem("user", user);
   }
   else{
     // No user is signed in

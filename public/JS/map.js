@@ -8,10 +8,14 @@ var map;
 
 var lang;
 
-window.onload = main;
+window.onload = main; 
 
 function main(){
-    
+    console.log(sessionStorage.getItem("user"));
+    if(sessionStorage.getItem("user") == null) {
+        window.location.href = "https://proyectotiti-6da63.firebaseapp.com/index.html";
+    }
+ 
     lang = localStorage.getItem("spanLang");
     initMap();
     

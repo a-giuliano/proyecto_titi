@@ -7,6 +7,11 @@ const totalVisitsCard = document.querySelector('#total-visits-card');
 const totalCommunities = document.querySelector('#ncommunities');
 
 window.onload = function main(){
+
+  if(sessionStorage.getItem("user") == null) {
+    window.location.href = "https://proyectotiti-6da63.firebaseapp.com/index.html";
+  }
+
   // get total number of families
   var families;
   var nfamilies = 0;
