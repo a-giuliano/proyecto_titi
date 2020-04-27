@@ -71,8 +71,10 @@ function generateData(data){
         // determine compliance of each factor
         if ("animals" in targetVisit && "compliant" in targetVisit.animals){
 	    var animals = targetVisit.animals.compliant;
-        }
-        else{
+	    var domestic = (targetVisit.animals.domestic != undefined) ? targetVisit.animals.domestic : "None";
+	    var wild = (targetVisit.animals.wild != undefined) ? targetVisit.animals.wild : "None";
+	}
+	else{
             var animals = "--";
         }
 
@@ -120,11 +122,13 @@ function generateData(data){
             "Last Visit Date"   : date,
             "Total Compliance"  : totalCompliance,
             "Animals"           : animals,
+	    "Domestic"		: JSON.stringify(domestic,null,4),
+	    "Wild"              : JSON.stringify(wild,null,4),
             "Conservation"      : conservation,
             "Recycle"           : recycle,
             "Structures"        : structures,
         }
-
+    
 	if (empty) {
             empties.push([entry, csvEntry]);
 	}
@@ -350,23 +354,6 @@ function showDetails(cell, data, type){
     if(document.getElementsByClassName('clicked')[0]) document.getElementsByClassName('clicked')[0].className = "click-cell";
     cell.className = 'clicked';
     if(type == 'animal'){
-        /*html += (lang != "true") ? `<h2>Domestic:</h2><ul>` : `<h2>Doméstico:</h2><ul>`;
-        for(var animal in data['domestic']){
-            html += (lang != "true") ?  `
-                <li>
-                    <b>Type</b>: ${data['domestic'][animal]['type']},
-                    <b>Count</b>: ${data['domestic'][animal]['amount']},
-                    <b>Compliant</b>: ${data['domestic'][animal]['compliant']}
-                </li>
-            ` :
-	    `
-                <li>
-                    <b>Tipo</b>: ${data['domestic'][animal]['type']},
-                    <b>Cantidad</b>: ${data['domestic'][animal]['amount']},
-                    <b>Complaciente</b>: ${data['domestic'][animal]['compliant']}
-                </li>
-            `;
-        }*/
         html += `</ul>`;
         if(data['wild'] != undefined) { 
 	    html += (lang != "true") ? `<h2>Wild:</h2><ul>` : `<h2>Silvestres:</h2><ul>`; 
@@ -374,7 +361,6 @@ function showDetails(cell, data, type){
 	    html += (lang != "true") ? `<h2>No Wild Animals to Log.</h2><ul>` : `<h2>No Animales Silvestres Para Registrar</h2><ul>`; 
 	}
         for(var animal in data['wild']){
-	    console.log(data['wild']);
             html += (lang != "true") ? `
                 <li>
                     <b>Classification</b>: ${data['wild'][animal]['classification']}, 
@@ -398,14 +384,7 @@ function showDetails(cell, data, type){
 	    ;
 
 	    for(var img in data['wild'][animal]['images']){
-		console.log(data['wild'][animal]['images'][img].toString());
 		html += `<img style="display: inline-block" src="${data['wild'][animal]['images'][img]}" height="100" width="100">`;
-
-		/*var httpsReference = storage.refFromURL(data['wild'][animal]['images'][img]);
-
-		httpsReference.getDownloadURL().then(function(url) {
-		    html += `<img src="url" height="100" width="100">`;
-		})*/		
 	    }
         }
         html += `</ul>`;
