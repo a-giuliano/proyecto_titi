@@ -1,10 +1,9 @@
 "use strict";
 
-var ref = database.ref("families");
-const nfamiliesCard = document.querySelector('#nfmailies-card');
-const compliantPercentageCard = document.querySelector('#compliant-percentage-card');
-const totalVisitsCard = document.querySelector('#total-visits-card');
-const totalCommunities = document.querySelector('#ncommunities');
+var ref = database.ref("trees_of_Value");
+var ntreesCard = document.querySelector('#ntrees-card');
+var percentageAliveCard = document.querySelector('#percentage-alive-card');
+var percentageHealthyCard = document.querySelector('#percentage-healthy-card');
 
 window.onload = function main(){
   if(sessionStorage.getItem("user") == null) {
@@ -12,78 +11,68 @@ window.onload = function main(){
   }
 
   // get total number of families
-  var families;
-  var nfamilies = 0;
-  var ncompliant = 0;
-  var compliantPercentage = 0;
-  var nTotalVisits = 0;
-  var ncommunities = 0;
-  var communities = {};
+  var trees_of_Value;
+  var ntrees = 0;
+  var nalive = 0;
+  var alivePercentage = 0;
+  var nhealthy = 0;
+  var healthyPercentage = 0;
+  //var communities = {}; // use later when implementing doughnut graphs
 
   ref.once('value', snap=>{
-    families = snap.val();
-    nfamilies = Object.keys(families).length;
+    trees_of_value = snap.val();
+    ntrees = Object.keys(trees_of_value).length;
 
-    var keys = Object.keys(families);
+    var keys = Object.keys(trees_of_Value);
     for(var i = 0; i < keys.length; i++){
-      var family = families[keys[i]];
+      var tree = trees_of_Value[keys[i]];
 
-      var visits = family.visits;
-      nTotalVisits += Object.keys(visits).length;
-
+      var visits = tree.visits;
       var targetVisit = visits[Object.keys(visits)[Object.keys(visits).length - 1]];
    
       if (targetVisit == undefined || targetVisit == null){
-	continue;
+	      continue;
       }
 
-       // determine compliance of each factor
-      if ("animals" in targetVisit && "compliant" in targetVisit.animals){
-        var animals = targetVisit.animals.compliant;
-      }
-      else{
-        var animals = "none";
+      // determine number of trees alive
+      if("reasonForDeath" in targetVisit){
+        nalive += (targetVisit.reasonForDeath == false)? 1 : 0;
       }
 
-      if ("conservation" in targetVisit && "compliant" in targetVisit.conservation){
-        var conservation = targetVisit.conservation.compliant;
-      }
-      else{
-        var conservation = "none";
+       // determine status of each health factor (fungus, insect, rotten, sick)
+      var fungus = ("fungus" in targetVisit) ? targetVisit.fungus : false;
+      var insect = ("insect" in targetVisit) ? targetVisit.insect : false;
+      var rotten = ("rotten" in targetVisit) ? targetVisit.rotten : false;
+      var sick = ("sick" in targetVisit) ? targetVisit.sick : false;
+
+      // healthy if no issues with any of the four health factors
+      var healthy = !(fungus || insect || rotten || sick);
+
+      if(healthy){
+        n_healthy++;
       }
 
-      if ("recycle" in targetVisit && "compliant" in targetVisit.recycle){
-        var recycle = targetVisit.recycle.compliant;
-      }
-      else{
-        var recycle = "none";
-      }
-
-      if ("structures" in targetVisit && "compliant" in targetVisit.structures){
-        var structures = targetVisit.structures.compliant;
-      }
-      else{
-        var structures = "none";
-      }
-      var totalCompliance = animals && conservation && recycle && structures;
-
-      if(totalCompliance || totalCompliance == "none"){
-        ncompliant++;
-      }
-
+      // use later when implementing doughnut graphs
+      /* 
       if ("basicData" in targetVisit && "community" in targetVisit.basicData && targetVisit.basicData.community != "") {
-    	if(titleCase(removeAccents(targetVisit.basicData.community)) in communities){
-	    communities[titleCase(removeAccents(targetVisit.basicData.community))]++;    	    
-	}
-	else {
-	    communities[titleCase(removeAccents(targetVisit.basicData.community))] = 1;
-	    ncommunities++;
-	}
+      	if(titleCase(removeAccents(targetVisit.basicData.community)) in communities){
+	        communities[titleCase(removeAccents(targetVisit.basicData.community))]++;    	    
+	      }
+	      else {
+	        communities[titleCase(removeAccents(targetVisit.basicData.community))] = 1;
+	        ncommunities++;
+	      }
       }
+      */
 
     }
 
-    compliantPercentage = Math.round((ncompliant / nfamilies) * 100);
+    alivePercentage = Math.round((nalive / ntrees) * 100);
+    healthyPercentage = Math.round((nhealthy / ntrees) * 100);
+
+    ntreesCard.innerHTML = ntrees;
+    percentageAliveCard.innerHTML = alivePercentage;
+    percentageHealthyCard.innerHTML = healthyPercentage;
   });
 }
 
