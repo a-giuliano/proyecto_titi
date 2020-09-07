@@ -90,7 +90,7 @@ def make_json(csvFilePath, jsonFilePath):
         if data[tree].get("death") == False:
             individualVisit.update({"deathLevel": "Nivel 0: Afectación 0 %"})
         elif data[tree].get("death") == True:
-            individualVisit.update({"deathLevel": "Nivel 100: Afectación 100 %"})
+            individualVisit.update({"deathLevel": "Nivel 4: Afectación > 75 %"})
         else:
             individualVisit.update({"deathLevel": "Nivel 0: Afectación 0 %"})
         # we can now pop the "dead" field from the individualVisit dict
