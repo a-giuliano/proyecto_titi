@@ -7,6 +7,13 @@ var config = {
   storageBucket: "proyectotiti-6da63.appspot.com",
   messagingSenderId: "424113983868"
 };
+
+if(location.hostname === 'localhost'){
+  config = {
+    databaseURL: 'http://localhost:9000?ns=proyectotiti-6da63'
+  }
+}
+
 firebase.initializeApp(config);
 
 const database = firebase.database();
