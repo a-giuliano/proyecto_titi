@@ -85,6 +85,17 @@ def make_json(csvFilePath, jsonFilePath):
         individualVisit.update({"height": data[tree].get("height (m)")})
         individualVisit.pop("height (m)")
 
+        # add deathLevel property to individualVisit dict 
+        # TODO This may need to be updated
+        if data[tree].get("death") == False:
+            individualVisit.update({"deathLevel": "Nivel 0: Afectación 0 %"})
+        elif data[tree].get("death") == True:
+            individualVisit.update({"deathLevel": "Nivel 100: Afectación 100 %"})
+        else:
+            individualVisit.update({"deathLevel": "Nivel 0: Afectación 0 %"})
+        # we can now pop the "dead" field from the individualVisit dict
+        individualVisit.pop("dead")
+
         # remove data fields from outer tree dict, as they have been moved to individualVisit dict inside
         data[tree].pop("gps (latitude)")
         data[tree].pop("gps (longitude)")
@@ -110,14 +121,9 @@ def make_json(csvFilePath, jsonFilePath):
         # copy two of the fields into the individualVisit dict
         individualVisit.update({"code": data[tree].get("code")})
         individualVisit.update({"location": data[tree].get("location")})
-
-        # add deathLevel property to individualVisit dict 
-        # TODO This may need to be updated
-        individualVisit.update({"deathLevel": "Nivel 0: Afectación 0 %"})
         
         # pop any values that need to be popped still
         individualVisit.pop("visit #")
-        individualVisit.pop("dead")
 
         # handle the formatting for the day field
         dayString = individualVisit.get("day")
