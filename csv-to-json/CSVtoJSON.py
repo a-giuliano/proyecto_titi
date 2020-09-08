@@ -80,7 +80,9 @@ def make_json(csvFilePath, jsonFilePath):
         individualVisit.update({"observation_desc": observation_desc})
         individualVisit.pop("observations")
 
-        individualVisit.update({"dap": float(data[tree].get("dap (cm)"))})
+        dap = data[tree].get("dap (cm)")
+        dap = dap.replace(",", ".")
+        individualVisit.update({"dap": dap})
         individualVisit.pop("dap (cm)")
         individualVisit.update({"height": data[tree].get("height (m)")})
         individualVisit.pop("height (m)")
