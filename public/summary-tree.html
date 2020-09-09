@@ -53,22 +53,31 @@
     <!----- Cards ----->
     <div class="cards">
 	    <div class="card" id="ntrees-card">
-	      <h1 id="numTrees"></h1>
+        <h1 id="numTrees"></h1>
 	      <p id="NTCLabel">Number of Tracked Trees of Value</p>
       </div>
-	    <div class="card" id="percentage-alive-card">
-	      <h1 id="percentHealthy"></h1>
-        <p id="PACLabel">Percentage of Trees Alive</p>
+
+	    <div class="card" id="pdead-card">
+        <h1 style="padding-left:20%" id="percentDead"></h1>
+        <p id="PDCLabel">Percentage of Trees Dead</p>
       </div>
+      
 	    <div class="card" id="percentage-healthy-card">
-	      <h1 id="percentAlive"></h1>
-        <p id="PHCLabel">Percentage of Trees Entirely Healthy</p>
+	      <h1 style="padding-left:20%" id="percentHealthy"></h1>
+        <p id="PHCLabel">Percentage of Trees that are Entirely Healthy</p>
+      </div>
+      
+      <div class="card" id="percentage-unhealthy-card">
+	      <h1 style="padding-left:20%" id="percentUnhealthy"></h1>
+        <p id="PUCLabel">Percentage of Trees that are Unhealthy</p>
 	    </div>
     </div>
 
-
-
-
+    <!-- Doughnut Graph -->
+    <p class="header" id="commGraphHeader">Number of Trees with Each Health Issue</p>
+    <div style="text-align:center">
+	    <div class="graphs" style="display:inline-block; width: 1200px; height: 1200px;"><canvas baseChart class="chart" id="doughnutChart"></canvas></div>
+    </div>
       
     <footer class="page-footer font-small">
       <button id="language" onClick="change();">Espanol</button>
@@ -77,8 +86,6 @@
   </div>
   
   <!--------------- Scripts --------------->
-
-
   <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
   <script src="JS/firebase.js"></script>
@@ -95,7 +102,7 @@
   <script type="text/javascript" src="JS/mdb.min.js"></script>
 
   <!-- Main Scripts -->
-  <script src="JS/summary.js"></script>
+  <script src="JS/summary-tree.js"></script>
   <script src="JS/logout.js"></script>
   <script src="JS/lang.js"></script>
   <script src="JS/translateTreeSum.js"></script>

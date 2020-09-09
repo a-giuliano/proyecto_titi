@@ -22,7 +22,7 @@ function update() {
 	/* Adjust NavBar Spacing */
 	var all = document.getElementsByClassName('nav-item');
 	for (var i = 0; i < all.length; i++) {
-	    all[i].style.width = "200px"; 
+	    all[i].style.width = "170px"; 
 	}
 
 	/* Update Words */ 
@@ -39,7 +39,7 @@ function update() {
 	/* Adjust NavBar Spacing */
 	var all = document.getElementsByClassName('nav-item');
         for (var i = 0; i < all.length; i++) {
-            all[i].style.width = "170px";
+            all[i].style.width = "180px";
         }
 
 	/* Update Words */ 
