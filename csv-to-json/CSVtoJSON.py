@@ -87,16 +87,21 @@ def make_json(csvFilePath, jsonFilePath):
         individualVisit.update({"height": data[tree].get("height (m)")})
         individualVisit.pop("height (m)")
 
-        # add deathLevel property to individualVisit dict 
-        # TODO This may need to be updated
+        # add deathLevel property to individualVisit dict and make
+        # reasonForDeath an empty string, as that is what the app will do
+        # TODO This may need to be updated based on future app and
+        # database decisions
         if data[tree].get("reasonForDeath") == False:
+            individualVisit.update({"reasonForDeath": ""})
             individualVisit.update({"deathLevel": "Nivel 0: Afectación 0 %"})
+        # assume any non-false reasonForDeath value will mean the tree is fully affected
         else:
             individualVisit.update({"deathLevel": "Nivel 4: Afectación > 75 %"})
         # we can now pop the "dead" field from the individualVisit dict
         individualVisit.pop("dead")
 
-        # remove data fields from outer tree dict, as they have been moved to individualVisit dict inside
+        # remove data fields from outer tree dict, as they have been moved
+        # to individualVisit dict inside
         data[tree].pop("gps (latitude)")
         data[tree].pop("gps (longitude)")
         data[tree].pop("observations")
