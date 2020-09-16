@@ -17,6 +17,7 @@ NOTE1: Minor manual editing of the CSV file may need to be done before the pytho
        I had to change '160+' to '160' for the height of a tree because the script cannot handle the original input
        as a float, as it tries to do. 
 
-NOTE2: The python script assumes the deathLevel attribute of each tree to be "Nivel 0: Afectación 0 %". This
-       assumption is made because the .xlsx file does not provide information about this field, but the field 
-       is necessary for the database. This may be something to change if it leads to inaccurate data.
+NOTE2: The python script assumes the deathLevel attribute of each tree to be "Nivel 0: Afectación 0 %" when the
+       reasonForDeath field is false and "Nivel 4: Afectación > 75 %" when it is non-false. If the reasonForDeath
+       field is false (in the CSV) then the script changes it to an empty string because the app will fill in the
+       reasonForDeath field with an empty string rather than a false value. 
