@@ -1,102 +1,129 @@
 <!DOCTYPE html>
 <html>
-  
+
 <head>
   <title>Proyecto Titi - Summary</title>
-  
+
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
   <!-- Material Design Bootstrap -->
   <link href="CSS/mdb.min.css" rel="stylesheet">
-  
+
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="CSS/summary-tree.css">  
+  <link rel="stylesheet" href="CSS/summary-tree.css">
   <link rel="stylesheet" href="CSS/navbar.css">
   <link rel="stylesheet" href="CSS/footer.css">
-    
+
 </head>
 
-<body>    
-    <!-- Nav Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light static-top">
-            <a class="navbar-brand" href="#">
-              <img src="img/banner.png" width="510" height="115" class="d-inline-block align-top" alt="">
-            </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a id="tv" class="nav-link" href="table.html">Table View</a>
-            </li>
-            <li class="nav-item">
-                <a id="mv" class="nav-link" href="map.html">Map View</a>
-            </li>
-            <li class="nav-item dropdown">
-		<a id="sv" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		  Summary Pages
-		</a>
-		<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-		  <a id="svc" class="dropdown-item" href="summary.html">Community Summary</a>
-		  <a id="svt" class="dropdown-item" href="summary-tree.html">Tree Summary</a>
-		</div>
-	      </li> 
-            <li class="nav-item">
-                <a id="logout" class="nav-link" onclick="logout()">Logout</a>
-            </li>
-          </ul>
-      </div>
-    </nav>
+<body>
+  <!-- Nav Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light static-top">
+    <a class="navbar-brand" href="#">
+      <img src="img/banner.png" width="510" height="115" class="d-inline-block align-top" alt="">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+      aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a id="tv" class="nav-link" href="table.html">Table View</a>
+        </li>
+        <li class="nav-item">
+          <a id="mv" class="nav-link" href="map.html">Map View</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a id="sv" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Summary Pages
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a id="svc" class="dropdown-item" href="summary.html">Community Summary</a>
+            <a id="svt" class="dropdown-item" href="summary-tree.html">Tree Summary</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a id="logout" class="nav-link" onclick="logout()">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-    <!----- Cards ----->
-    <div class="cards">
-	    <div class="card" id="ntrees-card">
-        <h1 id="numTrees"></h1>
-	      <p id="NTCLabel">Number of Tracked Trees of Value</p>
-      </div>
+  <!----- Drop Menu ----->
+  <div class="dropdowns">
+    <div class="dropdown">
+      <form>
+        <p><span id="visitNumText">Visit Number: </span>
+          <select class="visitNumSelect" id="visitNumSelectId">
+            <option value=0 id="mostRecentOption">Most Recent</option>
+            <!--- inserted options go here -->
+          </select>
+        </p> 
+      </form>
+    </div>
+    <div class="dropdown">
+      <p style="color:red" id="incompleteVisitData"></p>
+    </div>
+  </div>
 
-	    <div class="card" id="pdead-card">
-        <h1 style="padding-left:20%" id="percentDead"></h1>
-        <p id="PDCLabel">Percentage of Trees Dead</p>
-      </div>
-      
-	    <div class="card" id="percentage-healthy-card">
-	      <h1 style="padding-left:20%" id="percentHealthy"></h1>
-        <p id="PHCLabel">Percentage of Trees that are Entirely Healthy</p>
-      </div>
-      
-      <div class="card" id="percentage-unhealthy-card">
-	      <h1 style="padding-left:20%" id="percentUnhealthy"></h1>
-        <p id="PUCLabel">Percentage of Trees that are Unhealthy</p>
-	    </div>
+  <!----- Cards ----->
+  <div class="cards">
+    <div class="card" id="ntrees-card">
+      <h1 id="numTrees"></h1>
+      <p id="NTCLabel">Number of Tracked Trees of Value</p>
     </div>
 
-    <!-- Doughnut Graph -->
-    <p class="header" id="commGraphHeader">Number of Trees with Each Health Issue</p>
-    <div style="text-align:center">
-	    <div class="graphs" style="display:inline-block; width: 1200px; height: 1200px;"><canvas baseChart class="chart" id="doughnutChart"></canvas></div>
+    <div class="card" id="ndead-card">
+      <h1 style="padding-left:20%" id="numberDead"></h1>
+      <p id="NDCLabel">Number of Trees Dead</p>
     </div>
-      
-    <footer class="page-footer font-small">
-      <button id="language" onClick="change();">Espanol</button>
-    </footer>
+
+    <div class="card" id="number-healthy-card">
+      <h1 style="padding-left:20%" id="numberHealthy"></h1>
+      <p id="NHCLabel">Number of Trees that are Entirely Healthy</p>
+    </div>
+
+    <div class="card" id="number-unhealthy-card">
+      <h1 style="padding-left:20%" id="numberUnhealthy"></h1>
+      <p id="NUCLabel">Number of Trees that are Unhealthy</p>
+    </div>
+  </div>
+
+  <!-- Doughnut Graph -->
+  <p class="header" id="commGraphHeader">Number of Trees with Each Health Issue</p>
+  <div style="text-align:center">
+    <div class="graphs" style="display:inline-block; width: 1200px; height: 1200px;"><canvas baseChart class="chart"
+        id="doughnutChart"></canvas></div>
+  </div>
+
+  <footer class="page-footer font-small">
+    <button id="language" onClick="change();">Espanol</button>
+  </footer>
 
   </div>
-  
+
   <!--------------- Scripts --------------->
   <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
   <script src="JS/firebase.js"></script>
-  
+
   <!-- jQuery Scripts -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
   <!-- Bootstrap Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
 
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="JS/mdb.min.js"></script>
@@ -108,5 +135,5 @@
   <script src="JS/translateTreeSum.js"></script>
   <script src="JS/wordManipulations.js"></script>
 </body>
-    
+
 </html>
