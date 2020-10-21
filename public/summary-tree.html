@@ -53,58 +53,115 @@
     </div>
   </nav>
 
-  <!----- Drop Menu ----->
-  <div class="dropdowns">
+  <!--- Download Link ---->
+  <a style="margin-left: 5%" id="csv-link">Download data as csv</a>
+  <button id="resetButton" onclick="resetOptions()">Reset</button>
+
+  <!----- Dropdown Menus ----->
+  <div class="dropdowns" id="dropdownsDiv">
+
+    
+    <!-- Region Dropdown -->
+    <div class="dropdown">
+      <form>
+        <p><span id="regionText">Region: </span>
+          <select class="regionSelect" id="regionSelectId">
+            <option value="0" id="allOption">All</option>
+            <option value="1" id="ceibal">Ceibal</option>
+            <option value="2" id="reserve">Reserve</option>
+            <option value="3" id="corridors">Corridors</option>
+          </select>
+        </p> 
+      </form>
+    </div>
+    <!-- Visit Dropdown -->
     <div class="dropdown">
       <form>
         <p><span id="visitNumText">Visit Number: </span>
           <select class="visitNumSelect" id="visitNumSelectId">
-            <option value=0 id="mostRecentOption">Most Recent</option>
+            <!---<option value="0" id="mostRecentOption">Most Recent</option>--->
             <!--- inserted options go here -->
           </select>
         </p> 
       </form>
     </div>
-    <div class="dropdown">
-      <p style="color:red" id="incompleteVisitData"></p>
-    </div>
-  </div>
 
-  <!----- Cards ----->
+    <!--- Compare to Another Visit Dropdown -->
+    <div class="dropdown">
+      <form id="compareVisitForm">
+        <p><span id="compareVisitText">Compare to Visit: </span>
+          <select class="compareVisitSelect" id="compareVisitSelectId">
+            <!---<option value="0" id="noneOption">None</option>
+            <option value="-1" id="previousOption">Previous</option>--->
+            <!--- inserted options go here -->
+          </select>
+        </p> 
+      </form>
+    </div>
+
+  </div>
+  <!------ End of Dropdown Menus ----->
+
+  <!----- First Set of Cards ----->
   <div class="cards">
     <div class="card" id="ntrees-card">
-      <h1 id="numTrees"></h1>
-      <p id="NTCLabel">Number of Tracked Trees of Value</p>
+      <h1 style="padding-left:0%" id="numTrees"></h1>
+      <hr style="color:gray">
+      <p id="NTCLabel"># Tracked Trees</p>
     </div>
 
     <div class="card" id="ndead-card">
       <h1 style="padding-left:20%" id="numberDead"></h1>
-      <p id="NDCLabel">Number of Trees Dead</p>
+      <hr style="color:gray">
+      <p id="NDCLabel"># Dead</p>
     </div>
 
     <div class="card" id="number-healthy-card">
       <h1 style="padding-left:20%" id="numberHealthy"></h1>
-      <p id="NHCLabel">Number of Trees that are Entirely Healthy</p>
+      <hr style="color:gray">
+      <p id="NHCLabel"># Healthy</p>
     </div>
 
-    <div class="card" id="number-unhealthy-card">
+    <div class="card" id="number-unhealthy-card" style="float:left">
       <h1 style="padding-left:20%" id="numberUnhealthy"></h1>
-      <p id="NUCLabel">Number of Trees that are Unhealthy</p>
+      <hr style="color:gray">
+      <p id="NUCLabel"># Unhealthy</p>
+    </div>
+
+    <div class="card" id="change-avg-height-card">
+      <h1 style="padding-left:20%" id="avgHeightChange"></h1>
+      <hr style="color:gray">
+      <p id="ACHLabel">(Change in) Average Height (m)</p>
+    </div>
+
+    <div class="card" id="change-avg-dap-card">
+      <h1 style="padding-left:20%" id="avgDapChange"></h1>
+      <hr style="color:gray">
+      <p id="ACDLabel">(Change in) Average Dap (cm)</p>
     </div>
   </div>
 
-  <!-- Doughnut Graph -->
-  <p class="header" id="commGraphHeader">Number of Trees with Each Health Issue</p>
-  <div style="text-align:center">
-    <div class="graphs" style="display:inline-block; width: 1200px; height: 1200px;"><canvas baseChart class="chart"
-        id="doughnutChart"></canvas></div>
+  <!-- Reasons for Death Doughnut Graph -->
+  <div style="text-align:center; clear:both">
+    <p class="header" id="deathGraphHeader">Reasons for Death</p>
+    <div class="graphs" id="graphContainer" style="display:inline-block; width: 1200px; height: 650px;"><canvas baseChart class="chart"
+        id="doughnutChart-reasonsForDeath"></canvas></div>
   </div>
+
+  <!-- Health Issues Doughnut Graph -->
+  <div style="text-align:center">
+    <p class="header" id="healthGraphHeader">Number of Trees with Each Health Issue</p>
+    <div class="graphs" id="graphContainer" style="display:inline-block; width: 1200px; height: 650px;"><canvas baseChart class="chart"
+        id="doughnutChart-healthIssues"></canvas></div>
+  </div>
+
 
   <footer class="page-footer font-small">
     <button id="language" onClick="change();">Espanol</button>
   </footer>
 
   </div>
+
 
   <!--------------- Scripts --------------->
   <!-- Firebase Scripts -->
@@ -127,6 +184,9 @@
 
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="JS/mdb.min.js"></script>
+
+  <!--PAPA PARSE SCRIPT -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 
   <!-- Main Scripts -->
   <script src="JS/summary-tree.js"></script>

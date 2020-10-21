@@ -87,8 +87,8 @@ window.onload = function main(){
     console.log(communities);
     compliantPercentage = Math.round((ncompliant / nfamilies) * 100);
 
-    document.getElementById("numFamilies").innerHTML = nfamilies;
-    document.getElementById("perctFamilies").innerHTML = compliantPercentage;
+    document.getElementById("numFamilies").innerHTML = `${ncompliant}/${nfamilies} <i><span style="font-size:0.6em">(${compliantPercentage}%)</span></i>`;
+    //document.getElementById("perctFamilies").innerHTML = compliantPercentage;
     document.getElementById("numVisits").innerHTML = nTotalVisits;
     document.getElementById("numComm").innerHTML = ncommunities;
     
