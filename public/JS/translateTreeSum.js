@@ -4,8 +4,12 @@ function translate() {
 
     document.getElementById("csv-link").innerHTML = "Descargar datos como csv";
     document.getElementById("resetButton").innerHTML = "Reiniciar";
-    document.getElementById("healthGraphHeader").innerHTML = "Cantidad de Árboles con Cada Problema de Salud";
-    document.getElementById("deathGraphHeader").innerHTML = "Razones de Muerte";
+    if (document.getElementById("healthGraphHeader") != null) {
+        document.getElementById("healthGraphHeader").innerHTML = "Problemas de Salud";
+    }
+    if (document.getElementById("deathGraphHeader") != null) {
+        document.getElementById("deathGraphHeader").innerHTML = "Razones de Muerte";
+    }
 
     if (selectedCompareVisit == 0){
         document.getElementById("NTCLabel").innerHTML = "# Arboles Rastreados";
@@ -48,8 +52,12 @@ function detranslate() {
 
     document.getElementById("csv-link").innerHTML = "Download data as csv";
     document.getElementById("resetButton").innerHTML = "Reset";
-    document.getElementById("deathGraphHeader").innerHTML = "Reasons for Death";
-    document.getElementById("healthGraphHeader").innerHTML = "Number of Trees with Each Health Issue";
+    if (document.getElementById("deathGraphHeader") != null) {
+        document.getElementById("deathGraphHeader").innerHTML = "Reasons for Death";
+    }
+    if (document.getElementById("healthGraphHeader") != null) {
+        document.getElementById("healthGraphHeader").innerHTML = "Health Issues";
+    }
 
     if (selectedCompareVisit == 0){
         document.getElementById("NTCLabel").innerHTML = "# Tracked Trees";

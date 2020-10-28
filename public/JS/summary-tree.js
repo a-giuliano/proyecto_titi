@@ -12,12 +12,12 @@ var REGIONS = {
 
 // helper functions
 function setAttributes(el, attrs) {
-  for(var key in attrs) {
+  for (var key in attrs) {
     el.setAttribute(key, attrs[key]);
   }
 }
 
-function createOptionElement(attrs, innerhtml){
+function createOptionElement(attrs, innerhtml) {
   var option = document.createElement("option");
   setAttributes(option, attrs); // uses helper function
   option.innerHTML = innerhtml;
@@ -26,13 +26,13 @@ function createOptionElement(attrs, innerhtml){
 
 function removeAllChildNodes(parent) {
   while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
+    parent.removeChild(parent.firstChild);
   }
 }
 
-function createIncompleteVisitDataAlertElement(spanish){
+function createIncompleteVisitDataAlertElement(spanish) {
   var theAlert = document.createElement("div");
-  var attributes = {"class": "alert", "id": "incompleteVisitData"};
+  var attributes = { "class": "alert", "id": "incompleteVisitData" };
   setAttributes(theAlert, attributes);
   var alertText = document.createElement("p");
   alertText.setAttribute("id", "incompleteVisitDataText");
@@ -46,7 +46,7 @@ function resetOptions() {
   region_onchange();
   document.getElementById("compareVisitText").style.color = "black";
   var lang = localStorage.getItem("spanLang");
-  if (lang =="true") {
+  if (lang == "true") {
     translate();
   }
   else {
@@ -56,41 +56,42 @@ function resetOptions() {
 
 // when user selects a new region number, we want to redo the parsing and
 // displaying of data to match the specified region (we will reset the visit and compare dropdowns)
-function region_onchange(){
-    var selectedRegion = parseInt(document.getElementById("regionSelectId").value);
-    // reset visit number
-    document.getElementById("visitNumSelectId").value = 0;
-    // reset compared visit
-    document.getElementById("compareVisitSelectId").value = 0;
-    setCardsToSingleVisit();
-    var singleVisitData = parseDataSingleVisit(selectedRegion, 0);
-    populateDropdowns(singleVisitData.maxNumVisits, false);
-    displaySingleVisitData(singleVisitData);
+function region_onchange() {
+  var selectedRegion = parseInt(document.getElementById("regionSelectId").value);
+  // reset visit number
+  document.getElementById("visitNumSelectId").value = 0;
+  // reset compared visit
+  document.getElementById("compareVisitSelectId").value = 0;
+  setCardsToSingleVisit();
+  var singleVisitData = parseDataSingleVisit(selectedRegion, 0);
+  populateDropdowns(singleVisitData.maxNumVisits, false);
+  displaySingleVisitData(singleVisitData);
 }
 
 
 // when user selects a new visit number, we want to redo the parsing and
-// displaying of data to match the specified visit number (and reset compared visit)
-function visit_num_onchange(){
+// displaying of data to match the specified visit number (and reset the compare dropdown)
+function visit_num_onchange() {
   var selectedVisitNum = parseInt(document.getElementById("visitNumSelectId").value);
   var selectedRegion = parseInt(document.getElementById("regionSelectId").value);
   // reset compare visit dropdown
   document.getElementById("compareVisitSelectId").value = 0;
+  document.getElementById("compareVisitText").style.color = "black";
   // only view the newly selected visit, don't compare
   setCardsToSingleVisit();
   var singleVisitData = parseDataSingleVisit(selectedRegion, selectedVisitNum);
   displaySingleVisitData(singleVisitData);
   //update options for the compare visit dropdown
-  if (selectedVisitNum == 0){ // "Most recent"
+  if (selectedVisitNum == 0) { // "Most recent"
     populateDropdowns(singleVisitData.maxNumVisits, true);
   }
-  else{
+  else {
     // Only allow compare visit dropdown to have options for visits earlier than the selected visit
     populateDropdowns(selectedVisitNum, true);
   }
 }
 
-function compare_visit_onchange(){
+function compare_visit_onchange() {
   var selectedCompareVisit = parseInt(document.getElementById("compareVisitSelectId").value);
   var selectedVisitNum = parseInt(document.getElementById("visitNumSelectId").value);
   var selectedRegion = parseInt(document.getElementById("regionSelectId").value);
@@ -109,7 +110,7 @@ function compare_visit_onchange(){
   document.getElementById("compareVisitText").style.color = "blue";
 
   // if the user wants to compare against the previous visit
-  if (selectedCompareVisit == -1){
+  if (selectedCompareVisit == -1) {
     if (selectedVisitNum == 1) {
       // cannot allow comparison between visit 1 and previous visit, as there is no visit before visit 1
       var lang = localStorage.getItem("spanLang");
@@ -161,12 +162,31 @@ window.onload = function onload() {
     displaySingleVisitData(singleVisitData);
     update(); // from lang.js - unify the language being displayed
 
-    // ################
-    // TODO : ALLOW DOWNLOAD AS CSV
-    // ################
-    // load data into csv file link
+    
+    // load data for csv file download link
+    var csvData = [];
+    var keys = Object.keys(trees_of_Value);
+    for (var i = 0; i < keys.length; i++) {
+      var tree = trees_of_Value[keys[i]];
+      var visits = tree.visits;
+      var visit_keys = Object.keys(visits);
+      for (var j = 0; j < visit_keys.length; j++) {
+        csvData.push(visits[visit_keys[j]]);  // csvData is an array of visits
+      }
+    }
+    // config for papa unparse
+    var config = {
+      quotes: true, 
+      quoteChar: '"',
+      escapeChar: '"',
+      delimiter: ",",
+      header: true,
+      newline: "\r\n",
+      skipEmptyLines: false, 
+      columns: null
+    }
     var csvLink = document.querySelector('#csv-link');
-    var csvFile = new Blob([Papa.unparse(trees_of_Value["2BO12"])], {type: 'text'});
+    var csvFile = new Blob([Papa.unparse(csvData, config)], { type: 'text' });
     csvLink.href = URL.createObjectURL(csvFile);
     csvLink.download = 'Trees_of_Value-Data.csv';
   });
@@ -175,16 +195,16 @@ window.onload = function onload() {
 function populateDropdowns(numVisits, compareDropdownOnly) {
   // clear the compare dropdown
   removeAllChildNodes(document.getElementById("compareVisitSelectId"))
-  // add the new options
-  var none_option = createOptionElement({"value": "0", "id": "noneOption"}, "None");
+  // add the default options
+  var none_option = createOptionElement({ "value": "0", "id": "noneOption" }, "None");
   document.getElementById("compareVisitSelectId").appendChild(none_option);
 
-  var prev_option = createOptionElement({"value": "-1", "id": "previousOption"}, "Previous");
+  var prev_option = createOptionElement({ "value": "-1", "id": "previousOption" }, "Previous");
   document.getElementById("compareVisitSelectId").appendChild(prev_option);
-  
+
   // add individual visit options
   for (var i = 1; i < numVisits; i++) {
-    var option = createOptionElement({"value": i.toString()}, i.toString()); // helper function
+    var option = createOptionElement({ "value": i.toString() }, i.toString()); // uses helper function
     document.getElementById("compareVisitSelectId").appendChild(option);
   }
   // if we only need to update compare visit dropdown
@@ -194,13 +214,13 @@ function populateDropdowns(numVisits, compareDropdownOnly) {
 
   // clear the visit dropdown
   removeAllChildNodes(document.getElementById("visitNumSelectId"))
-  // add "Most Recent" option
-  var mr_option = createOptionElement({"value": "0", "id": "mostRecentOption"}, "Most Recent"); // helper function
+  // add default "Most Recent" option
+  var mr_option = createOptionElement({ "value": "0", "id": "mostRecentOption" }, "Most Recent"); // helper function
   document.getElementById("visitNumSelectId").appendChild(mr_option);
 
   // add individual visit options
-  for (var i = 1; i <= numVisits; i++){
-    var option = createOptionElement({"value": i.toString()}, i.toString()); // helper function
+  for (var i = 1; i <= numVisits; i++) {
+    var option = createOptionElement({ "value": i.toString() }, i.toString()); // helper function
     document.getElementById("visitNumSelectId").appendChild(option);
   }
 }
@@ -242,6 +262,14 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
   var incompleteVisitData = false;
   var sumOfHeights = 0;
   var sumOfDaps = 0;
+  var previousVisit_forHealthData; // Need this to determine # of NEWLY health/unhealthy
+                                   // trees in THIS visit (this info is useful when we
+                                   // need to display comparison data between two visits
+                                   // and want to show the change in # healthy/unhealthy).
+                                   // We are still only returning the data for a single 
+                                   // visit from this function.
+  var newly_healthy = 0;
+  var newly_unhealthy = 0;
 
   // console.log("Parsing");
   // console.log(typeof trees_of_Value);
@@ -264,32 +292,27 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
     var visits = tree.visits;
     var numVisits = Object.keys(visits).length;
 
-    if (maxNumVisits < numVisits){
+    if (maxNumVisits < numVisits) {
       maxNumVisits = numVisits;
     }
 
-    
+
     var targetVisit = undefined;
     // if we want most recent visit
     if (selectedVisitNum == 0) {
       targetVisit = visits[Object.keys(visits)[numVisits - 1]];
+      previousVisit_forHealthData = visits[Object.keys(visits)[numVisits - 2]];
     }
     //if we want the previous visit
-    else if (selectedVisitNum == -1){
-      try {
-        targetVisit = visits[Object.keys(visits)[numVisits - 2]];
-      }
-      catch (err){
-        console.log("Catching error");
-        // If the tree only has one visit, we can't get a previous visit;
-        incompleteVisitData = true;
-        break;
-      }
+    else if (selectedVisitNum == -1) {
+      targetVisit = visits[Object.keys(visits)[numVisits - 2]]; // can result in undefined
+      previousVisit_forHealthData = visits[Object.keys(visits)[numVisits - 3]];
     }
     // otherwise, use data for the visit that the user
     // specified with the drop down menu
     else {
       targetVisit = visits[Object.keys(visits)[selectedVisitNum - 1]];
+      previousVisit_forHealthData = visits[Object.keys(visits)[selectedVisitNum - 2]];
     }
 
     if (targetVisit == undefined || targetVisit == null) {
@@ -313,14 +336,7 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
 
     // add height and dap to appropriate accumulating variables
     sumOfHeights += ("height" in targetVisit) ? parseFloat(targetVisit.height) : 0;
-    if ("dap" in targetVisit){
-      if (targetVisit.dap == "-75.3") sumOfDaps += 75.3;
-      else if (targetVisit.dap == "-75.5") sumOfDaps += 75.5;
-      else if (targetVisit.dap == "Mas 160" && targetVisit.code == "2CL10") sumOfDaps += 200;
-      else if (targetVisit.dap == "Mas 160" && targetVisit.code == "2LE04") sumOfDaps += 167.5;
-      else sumOfDaps += parseFloat(targetVisit.dap);
-    }
-    //sumOfDaps += ("dap" in targetVisit) ? parseFloat(targetVisit.dap) : 0; <------------------- change back later
+    sumOfDaps += ("dap" in targetVisit) ? parseFloat(targetVisit.dap) : 0;
 
     // determine status of each health factor (fungus, insect, rotten, sick)
     var fungus = ("fungus" in targetVisit) ? targetVisit.fungus : false;
@@ -334,6 +350,23 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
 
     if (healthy) {
       nhealthy++;
+    }
+
+    // determine status of each health factor for the previous visit
+    if (previousVisit_forHealthData != undefined) {
+      var prev_fungus = ("fungus" in previousVisit_forHealthData) ? previousVisit_forHealthData.fungus : false;
+      var prev_insect = ("insect" in previousVisit_forHealthData) ? previousVisit_forHealthData.insect : false;
+      var prev_rotten = ("rotten" in previousVisit_forHealthData) ? previousVisit_forHealthData.rotten : false;
+      var prev_sick = ("sick" in previousVisit_forHealthData) ? previousVisit_forHealthData.sick : false;
+      var previousVisitWasHealthy = (previousVisit_forHealthData == undefined) ? true : !(prev_fungus || prev_insect || prev_rotten || prev_sick);
+      // determine if our tree is newly healthy/unhealthy in this visit
+      // compared to the previous visit
+      if (healthy && !previousVisitWasHealthy) {
+        newly_healthy++;
+      }
+      if (!healthy && previousVisitWasHealthy) {
+        newly_unhealthy++;
+      }
     }
 
     if (fungus) {
@@ -385,6 +418,8 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
   singleVisitData.ntrees = ntrees;
   singleVisitData.ndead = ndead;
   singleVisitData.nhealthy = nhealthy;
+  singleVisitData.newly_healthy = newly_healthy;
+  singleVisitData.newly_unhealthy = newly_unhealthy;
   singleVisitData.nunhealthy = ntrees - nhealthy;
   singleVisitData.healthIssues = healthIssues;
   singleVisitData.reasonsForDeath = reasonsForDeath;
@@ -399,23 +434,29 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
 function compareVisits(currentVisitData, compareVisitData) {
   console.log("avgHeight: " + currentVisitData.avgHeight);
   console.log("avgDap: " + currentVisitData.avgDap);
-  
+
   // note: compare visit happened before current visit
   // Get the comparison data we need for the new comparison cards
   var comparisonData = {}
   comparisonData.changeNumTracked = currentVisitData.ntrees - compareVisitData.ntrees;
-  comparisonData.changeNumTrackedPerc = compareVisitData.ntrees == 0 ? 0 : ((comparisonData.changeNumTracked / compareVisitData.ntrees) * 100).toFixed(2);
+  comparisonData.changeNumTrackedPerc = compareVisitData.ntrees == 0 ? 0 : parseFloat(((comparisonData.changeNumTracked / compareVisitData.ntrees) * 100).toFixed(2));
   comparisonData.changeNumDead = currentVisitData.ndead - compareVisitData.ndead;
-  comparisonData.changeNumDeadPerc = compareVisitData.ndead == 0 ? 0 : ((comparisonData.changeNumDead / compareVisitData.ndead) * 100).toFixed(2);
-  comparisonData.changeNumHealthy = currentVisitData.nhealthy - compareVisitData.nhealthy;
-  comparisonData.changeNumHealthyPerc = compareVisitData.nhealthy == 0 ? 0 : ((comparisonData.changeNumHealthy / compareVisitData.nhealthy) * 100).toFixed(2);
-  comparisonData.changeNumUnhealthy = currentVisitData.nunhealthy - compareVisitData.nunhealthy;
-  comparisonData.changeNumUnhealthyPerc = compareVisitData.nunhealthy == 0 ? 0 : ((comparisonData.changeNumUnhealthy / compareVisitData.nunhealthy) * 100).toFixed(2);
-  comparisonData.changeAvgHeight = (currentVisitData.avgHeight - compareVisitData.avgHeight).toFixed(2);
-  comparisonData.changeAvgHeightPerc = compareVisitData.avgHeight == 0 ? 0 : ((comparisonData.changeAvgHeight / compareVisitData.avgHeight) * 100).toFixed(2);
-  comparisonData.changeAvgDap = (currentVisitData.avgDap - compareVisitData.avgDap).toFixed(2);
-  comparisonData.changeAvgDapPerc = compareVisitData.avgDap == 0 ? 0 : ((comparisonData.changeAvgDap / compareVisitData.avgDap) * 100).toFixed(2);
+  comparisonData.changeNumDeadPerc = compareVisitData.ndead == 0 ? 0 : parseFloat(((comparisonData.changeNumDead / compareVisitData.ndead) * 100).toFixed(2));
   
+  //comparisonData.changeNumHealthy = currentVisitData.nhealthy - compareVisitData.nhealthy;
+  //comparisonData.changeNumHealthyPerc = compareVisitData.nhealthy == 0 ? 0 : parseFloat(((comparisonData.changeNumHealthy / compareVisitData.nhealthy) * 100).toFixed(2));
+  //comparisonData.changeNumUnhealthy = currentVisitData.nunhealthy - compareVisitData.nunhealthy;
+  //comparisonData.changeNumUnhealthyPerc = compareVisitData.nunhealthy == 0 ? 0 : parseFloat(((comparisonData.changeNumUnhealthy / compareVisitData.nunhealthy) * 100).toFixed(2));
+  comparisonData.changeNumHealthy = currentVisitData.newly_healthy;
+  comparisonData.changeNumHealthyPerc = compareVisitData.newly_healthy == 0 ? 0 : parseFloat(((currentVisitData.newly_healthy / compareVisitData.nhealthy) * 100).toFixed(2));
+  comparisonData.changeNumUnhealthy = currentVisitData.newly_unhealthy;
+  comparisonData.changeNumUnhealthyPerc = compareVisitData.newly_unhealthy == 0 ? 0 : parseFloat(((currentVisitData.newly_unhealthy / compareVisitData.nunhealthy) * 100).toFixed(2));
+  
+  comparisonData.changeAvgHeight = (currentVisitData.avgHeight - compareVisitData.avgHeight).toFixed(2);
+  comparisonData.changeAvgHeightPerc = compareVisitData.avgHeight == 0 ? 0 : parseFloat(((comparisonData.changeAvgHeight / compareVisitData.avgHeight) * 100).toFixed(2));
+  comparisonData.changeAvgDap = (currentVisitData.avgDap - compareVisitData.avgDap).toFixed(2);
+  comparisonData.changeAvgDapPerc = compareVisitData.avgDap == 0 ? 0 : parseFloat(((comparisonData.changeAvgDap / compareVisitData.avgDap) * 100).toFixed(2));
+
   // Get data about reasons for death and health issues for any trees that are newly
   // affected between the earlier visit and the later visit (for use in dougnut graphs)
   comparisonData.reasonsForDeath = {};
@@ -469,67 +510,87 @@ function displayComparisonData(cData) {
 
 // display cards and doughnut graph for information about a single visit
 function displaySingleVisitData(singleVisitData) {
+  // reset the color of the "Compare Visit" text so user knows they are
+  // only looking at info for a single visit
+  document.getElementById("compareVisitText").style.color = "black";
+
   var ntrees = singleVisitData.ntrees;
   var ndead = singleVisitData.ndead;
   var nhealthy = singleVisitData.nhealthy;
   var healthIssues = singleVisitData.healthIssues;
   var reasonsForDeath = singleVisitData.reasonsForDeath;
   var nunhealthy = singleVisitData.nunhealthy;
-  var deadPercentage = ((ndead / ntrees) * 100).toFixed(2);
-  var healthyPercentage = (((nhealthy-ndead) / (ntrees - ndead)) * 100).toFixed(2);
-  var unhealthyPercentage = ((nunhealthy / (ntrees - ndead)) * 100).toFixed(2);
+  var deadPercentage = parseFloat(((ndead / ntrees) * 100).toFixed(2));
+  var healthyPercentage = parseFloat((((nhealthy - ndead) / (ntrees - ndead)) * 100).toFixed(2));
+  var unhealthyPercentage = parseFloat(((nunhealthy / (ntrees - ndead)) * 100).toFixed(2));
 
   document.getElementById("numTrees").innerHTML = ntrees;
   document.getElementById("numberDead").innerHTML = `${ndead}/${ntrees} <i><span style="font-size:0.6em">(${deadPercentage}%)</span></i>`;
-  document.getElementById("numberHealthy").innerHTML = `${nhealthy-ndead}/${ntrees-ndead} <i><span style="font-size:0.6em">(${healthyPercentage}%)</span></i>`;
-  document.getElementById("numberUnhealthy").innerHTML = `${nunhealthy}/${ntrees-ndead} <i><span style="font-size:0.6em">(${unhealthyPercentage}%)</span></i>`;
+  document.getElementById("numberHealthy").innerHTML = `${nhealthy - ndead}/${ntrees - ndead} <i><span style="font-size:0.6em">(${healthyPercentage}%)</span></i>`;
+  document.getElementById("numberUnhealthy").innerHTML = `${nunhealthy}/${ntrees - ndead} <i><span style="font-size:0.6em">(${unhealthyPercentage}%)</span></i>`;
 
   // create 'reasons for death' and 'health issues' doughnut graphs
   createDougnutGraphs(reasonsForDeath, healthIssues);
 }
 
-function createDougnutGraphs(reasonsForDeath, healthIssues){
-  var deathChart = document.getElementById("doughnutChart-reasonsForDeath");
-  if (typeof(deathChart) != undefined && deathChart != null){
-    $('#doughnutChart-reasonsForDeath').remove();
+function createDougnutGraphs(reasonsForDeath, healthIssues) {
+  // remove graphs and headers if no data is available, but show headers
+  // and create doughnut graphs if data is available
+  if (Object.keys(reasonsForDeath).length == 0) {
+    console.log("display none, reasons for death");
+    document.getElementById("reasonsForDeath-graph-div").style.display = "none";
   }
-  $('#graphContainer').append('<canvas baseChart class ="chart" id="doughnutChart-reasonsForDeath"></canvas>');
-  var ctxD = document.getElementById("doughnutChart-reasonsForDeath").getContext('2d');
-  var myDeathChart = new Chart(ctxD, {
-    type: 'doughnut',
-    data: {
-      labels: $.map(reasonsForDeath, function (value, key) { return key }),
-      datasets: [{
-        data: $.map(reasonsForDeath, function (value, key) { return value }),
-        backgroundColor: $.map(reasonsForDeath, function (value, key) { return '#' + Math.floor(Math.random() * 16777215).toString(16) }),
-      }]
-    },
-    chartOptions: {
-      responsive: true,
-      maintainAspectRatio: false,
+  else {
+    document.getElementById("reasonsForDeath-graph-div").style.display = "block";
+    var deathChart = document.getElementById("doughnutChart-reasonsForDeath");
+    if (typeof (deathChart) != undefined && deathChart != null) {
+      $('#doughnutChart-reasonsForDeath').remove();
     }
-  });
+    $('#graphContainer').append('<canvas baseChart class ="chart" id="doughnutChart-reasonsForDeath"></canvas>');
+    var ctxD = document.getElementById("doughnutChart-reasonsForDeath").getContext('2d');
+    var myDeathChart = new Chart(ctxD, {
+      type: 'doughnut',
+      data: {
+        labels: $.map(reasonsForDeath, function (value, key) { return key }),
+        datasets: [{
+          data: $.map(reasonsForDeath, function (value, key) { return value }),
+          backgroundColor: $.map(reasonsForDeath, function (value, key) { return '#' + Math.floor(Math.random() * 16777215).toString(16) }),
+        }]
+      },
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+      }
+    });
+  }
 
-  var healthChart = document.getElementById("doughnutChart-healthIssues");
-  if (typeof(healthChart) != undefined && healthChart != null){
-    $('#doughnutChart-healthIssues').remove();
+  if (Object.keys(healthIssues).length == 0) {
+    console.log("display none, health issues");
+    document.getElementById("healthIssues-graph-div").style.display = "none";
   }
-  $('#graphContainer').append('<canvas baseChart class ="chart" id="doughnutChart-healthIssues"></canvas>');
-  var ctxD = document.getElementById("doughnutChart-healthIssues").getContext('2d');
-  var myHealthChart = new Chart(ctxD, {
-    type: 'doughnut',
-    data: {
-      labels: $.map(healthIssues, function (value, key) { return key }),
-      datasets: [{
-        data: $.map(healthIssues, function (value, key) { return value }),
-        backgroundColor: $.map(healthIssues, function (value, key) { return '#' + Math.floor(Math.random() * 16777215).toString(16) }),
-      }]
-    },
-    chartOptions: {
-      responsive: true,
-      maintainAspectRatio: false,
+  else {
+    document.getElementById("healthIssues-graph-div").style.display = "block";
+    var healthChart = document.getElementById("doughnutChart-healthIssues");
+    if (typeof (healthChart) != undefined && healthChart != null) {
+      $('#doughnutChart-healthIssues').remove();
     }
-  });
+    $('#graphContainer').append('<canvas baseChart class ="chart" id="doughnutChart-healthIssues"></canvas>');
+    var ctxD = document.getElementById("doughnutChart-healthIssues").getContext('2d');
+    var myHealthChart = new Chart(ctxD, {
+      type: 'doughnut',
+      data: {
+        labels: $.map(healthIssues, function (value, key) { return key }),
+        datasets: [{
+          data: $.map(healthIssues, function (value, key) { return value }),
+          backgroundColor: $.map(healthIssues, function (value, key) { return '#' + Math.floor(Math.random() * 16777215).toString(16) }),
+        }]
+      },
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+      }
+    });
+  }
 }
 
 function setCardsToSingleVisit() {

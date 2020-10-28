@@ -106,51 +106,51 @@
   <div class="cards">
     <div class="card" id="ntrees-card">
       <h1 style="padding-left:0%" id="numTrees"></h1>
-      <hr style="color:gray">
+      <hr>
       <p id="NTCLabel"># Tracked Trees</p>
     </div>
 
     <div class="card" id="ndead-card">
-      <h1 style="padding-left:20%" id="numberDead"></h1>
-      <hr style="color:gray">
+      <h1 id="numberDead"></h1>
+      <hr>
       <p id="NDCLabel"># Dead</p>
     </div>
 
     <div class="card" id="number-healthy-card">
-      <h1 style="padding-left:20%" id="numberHealthy"></h1>
-      <hr style="color:gray">
+      <h1 id="numberHealthy"></h1>
+      <hr>
       <p id="NHCLabel"># Healthy</p>
     </div>
 
     <div class="card" id="number-unhealthy-card" style="float:left">
-      <h1 style="padding-left:20%" id="numberUnhealthy"></h1>
-      <hr style="color:gray">
+      <h1 id="numberUnhealthy"></h1>
+      <hr>
       <p id="NUCLabel"># Unhealthy</p>
     </div>
 
     <div class="card" id="change-avg-height-card">
-      <h1 style="padding-left:20%" id="avgHeightChange"></h1>
-      <hr style="color:gray">
+      <h1 id="avgHeightChange"></h1>
+      <hr>
       <p id="ACHLabel">(Change in) Average Height (m)</p>
     </div>
 
     <div class="card" id="change-avg-dap-card">
-      <h1 style="padding-left:20%" id="avgDapChange"></h1>
-      <hr style="color:gray">
+      <h1 id="avgDapChange"></h1>
+      <hr>
       <p id="ACDLabel">(Change in) Average Dap (cm)</p>
     </div>
   </div>
 
   <!-- Reasons for Death Doughnut Graph -->
-  <div style="text-align:center; clear:both">
+  <div style="text-align:center; clear:both" id="reasonsForDeath-graph-div">
     <p class="header" id="deathGraphHeader">Reasons for Death</p>
     <div class="graphs" id="graphContainer" style="display:inline-block; width: 1200px; height: 650px;"><canvas baseChart class="chart"
         id="doughnutChart-reasonsForDeath"></canvas></div>
   </div>
 
   <!-- Health Issues Doughnut Graph -->
-  <div style="text-align:center">
-    <p class="header" id="healthGraphHeader">Number of Trees with Each Health Issue</p>
+  <div style="text-align:center" id="healthIssues-graph-div">
+    <p class="header" id="healthGraphHeader">Health Issues</p>
     <div class="graphs" id="graphContainer" style="display:inline-block; width: 1200px; height: 650px;"><canvas baseChart class="chart"
         id="doughnutChart-healthIssues"></canvas></div>
   </div>

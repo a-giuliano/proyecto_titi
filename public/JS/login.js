@@ -4,7 +4,7 @@ firebase.auth().onAuthStateChanged(function(user){
     localStorage.setItem("spanLang", "true");
     console.log('success');
     sessionStorage.setItem("user", user);
-    window.location.href = "https://proyectotiti-6da63.firebaseapp.com/table.html";
+    window.location.href = "../summary-tree.html";
   }
   else{
     // No user is signed in
