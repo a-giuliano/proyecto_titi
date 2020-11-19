@@ -1,6 +1,19 @@
 "use strict";
 
 var ref = database.ref("trees_of_Value");
+
+// Code template to display an image from Firebase Storage
+// if needed for future features
+
+// function showimage() {
+//   var storageRef = firebase.storage().ref();
+//   var photoRef = storageRef.child('Photos/JPEG_20190215_114607454706354483209118.jpg');
+//   photoRef.getDownloadURL().then(function(url) {
+//       document.getElementById("test-photo").src = url;
+//   });
+// }
+// showimage();
+
 var trees_of_Value;
 var DROPDOWN_POPULATED = false;
 var REGIONS = {
@@ -10,7 +23,7 @@ var REGIONS = {
   3: "Corredores"
 }
 
-// helper functions
+//----- helper functions
 function setAttributes(el, attrs) {
   for (var key in attrs) {
     el.setAttribute(key, attrs[key]);
@@ -19,7 +32,7 @@ function setAttributes(el, attrs) {
 
 function createOptionElement(attrs, innerhtml) {
   var option = document.createElement("option");
-  setAttributes(option, attrs); // uses helper function
+  setAttributes(option, attrs);
   option.innerHTML = innerhtml;
   return option;
 }
@@ -29,6 +42,7 @@ function removeAllChildNodes(parent) {
     parent.removeChild(parent.firstChild);
   }
 }
+//-----
 
 function createIncompleteVisitDataAlertElement(spanish) {
   var theAlert = document.createElement("div");
@@ -122,12 +136,21 @@ function compare_visit_onchange() {
       }
       document.getElementById("compareVisitSelectId").value = 0;
     }
-    // if the user wants to compare against a certain visit that is not visit 1
     else {
-      // show the comparison cards instead
+      // show the comparison cards
       setCardsToCompareVisits();
-      var compareVisitData = parseDataSingleVisit(selectedRegion, selectedCompareVisit);
-      var currentVisitData = parseDataSingleVisit(selectedRegion, selectedVisitNum);
+      var currentVisitData;
+      var compareVisitData;
+      // If the selected visit is "Most Recent" then send -1 for the compare visit when "Previous" is chosen.
+      if (selectedVisitNum == 0) {
+        currentVisitData = parseDataSingleVisit(selectedRegion, selectedVisitNum, selectedCompareVisit);
+        compareVisitData = parseDataSingleVisit(selectedRegion, selectedCompareVisit);
+      }
+      // If the selected visit is a specific number, then send that visit number minus 1 for the visit to compare to.
+      else {
+        currentVisitData = parseDataSingleVisit(selectedRegion, selectedVisitNum, selectedVisitNum - 1);
+        compareVisitData = parseDataSingleVisit(selectedRegion, selectedVisitNum - 1);
+      }
       compareVisits(currentVisitData, compareVisitData);
     }
   }
@@ -137,7 +160,7 @@ function compare_visit_onchange() {
     // show the comparison cards instead
     setCardsToCompareVisits();
     var compareVisitData = parseDataSingleVisit(selectedRegion, selectedCompareVisit);
-    var currentVisitData = parseDataSingleVisit(selectedRegion, selectedVisitNum);
+    var currentVisitData = parseDataSingleVisit(selectedRegion, selectedVisitNum, selectedCompareVisit);
     compareVisits(currentVisitData, compareVisitData);
   }
 }
@@ -152,7 +175,7 @@ window.onload = function onload() {
   document.getElementById("visitNumSelectId").onchange = visit_num_onchange;
   document.getElementById("compareVisitSelectId").onchange = compare_visit_onchange;
 
-  // parse and display with region set to All and visit number set to Most Recent
+  // parse and display with region set to "All" and visit number set to "Most Recent"
   ref.once('value', snap => {
     trees_of_Value = snap.val();
     //setup();
@@ -169,6 +192,7 @@ window.onload = function onload() {
     for (var i = 0; i < keys.length; i++) {
       var tree = trees_of_Value[keys[i]];
       var visits = tree.visits;
+      if (visits == undefined || visits == null) { continue; }
       var visit_keys = Object.keys(visits);
       for (var j = 0; j < visit_keys.length; j++) {
         csvData.push(visits[visit_keys[j]]);  // csvData is an array of visits
@@ -185,6 +209,7 @@ window.onload = function onload() {
       skipEmptyLines: false, 
       columns: null
     }
+    // make csv link functional
     var csvLink = document.querySelector('#csv-link');
     var csvFile = new Blob([Papa.unparse(csvData, config)], { type: 'text' });
     csvLink.href = URL.createObjectURL(csvFile);
@@ -249,70 +274,85 @@ function checkAllTreesHaveVisit(incompleteVisitData) {
   }
 }
 
-function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
+function parseDataSingleVisit(selectedRegion, selectedVisitNum, comparedVisitNum_forHealthData=undefined) {
+  // Need comparedVisitNum_forHealthData to determine # of _newly_ health/unhealthy
+  // trees in _this_ visit (this info is useful when we need to display comparison data 
+  // between two visits and want to show the change in # healthy/unhealthy).
+  // We are still only returning the data for a single visit from this function.
 
   var maxNumVisits = 0;
-  // variables for updating cards in summary-tree.html
   var ntrees = 0;
   var ndead = 0;
   var nhealthy = 0;
+  var nunhealthy = 0;
   var healthIssues = {}; // used when implementing doughnut graphs
   var reasonsForDeath = {}; // used when implementing doughnut graphs
   var singleVisitData = {};
   var incompleteVisitData = false;
   var sumOfHeights = 0;
   var sumOfDaps = 0;
-  var previousVisit_forHealthData; // Need this to determine # of NEWLY health/unhealthy
-                                   // trees in THIS visit (this info is useful when we
-                                   // need to display comparison data between two visits
-                                   // and want to show the change in # healthy/unhealthy).
-                                   // We are still only returning the data for a single 
-                                   // visit from this function.
+  var comparedVisit_healthData = undefined;
   var newly_healthy = 0;
   var newly_unhealthy = 0;
+  var speciesTotalHeights = {};
+  var speciesNumTrees = {};
+  var speciesAvgHeights = {};
 
-  // console.log("Parsing");
-  // console.log(typeof trees_of_Value);
-  // console.log(trees_of_Value);
   ntrees = Object.keys(trees_of_Value).length;
 
   var keys = Object.keys(trees_of_Value);
+
+  // loop through the trees in the realtime database
   for (var i = 0; i < keys.length; i++) {
     var tree = trees_of_Value[keys[i]];
-    // check for correct region
-    if (selectedRegion == 0) { // all regions
-      ;
-    }
-    else if (REGIONS[selectedRegion] != tree.location) {
+
+    // check if we have are parsing a specific region and the tree
+    // location does not match the region
+    if (selectedRegion != 0 && REGIONS[selectedRegion] != tree.location) {
       // region of tree doesn't match selected region
       ntrees -= 1;
       continue;
     }
 
     var visits = tree.visits;
+    if (visits == undefined || visits == null) {
+      // tree with no visits
+      nhealthy++;
+      continue;
+    }
     var numVisits = Object.keys(visits).length;
 
     if (maxNumVisits < numVisits) {
       maxNumVisits = numVisits;
     }
 
-
     var targetVisit = undefined;
     // if we want most recent visit
     if (selectedVisitNum == 0) {
       targetVisit = visits[Object.keys(visits)[numVisits - 1]];
-      previousVisit_forHealthData = visits[Object.keys(visits)[numVisits - 2]];
+      //previousVisit_forHealthData = visits[Object.keys(visits)[numVisits - 2]];
+      if (comparedVisitNum_forHealthData == -1) {
+        comparedVisit_healthData = visits[Object.keys(visits)[numVisits - 2]];
+      }
+      else if (comparedVisitNum_forHealthData != undefined) {
+        comparedVisit_healthData = visits[Object.keys(visits)[comparedVisitNum_forHealthData - 1]];
+      }
     }
     //if we want the previous visit
     else if (selectedVisitNum == -1) {
       targetVisit = visits[Object.keys(visits)[numVisits - 2]]; // can result in undefined
-      previousVisit_forHealthData = visits[Object.keys(visits)[numVisits - 3]];
     }
     // otherwise, use data for the visit that the user
     // specified with the drop down menu
     else {
       targetVisit = visits[Object.keys(visits)[selectedVisitNum - 1]];
-      previousVisit_forHealthData = visits[Object.keys(visits)[selectedVisitNum - 2]];
+      //previousVisit_forHealthData = visits[Object.keys(visits)[selectedVisitNum - 2]];
+      if (comparedVisitNum_forHealthData != undefined && comparedVisitNum_forHealthData != -1) {
+        comparedVisit_healthData = visits[Object.keys(visits)[comparedVisitNum_forHealthData - 1]];
+      }
+      else if (comparedVisitNum_forHealthData == -1) {
+        comparedVisit_healthData = visits[Object.keys(visits)[selectedVisitNum - 2]];
+      }
     }
 
     if (targetVisit == undefined || targetVisit == null) {
@@ -321,17 +361,27 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
       continue;
     }
 
-    // determine if tree is dead or at least affected 
-    // at some level
-    var affected = false;
+    // determine if tree is dead or affected at some level
     if ("deathLevel" in targetVisit) {
       var deathLevel = targetVisit.deathLevel;
       deathLevel = deathLevel[6]; // the digit after 'Nivel'
-      // if the Nivel in the deathLevel field is '4'
-      // (which is when Afectacion is 100%), then the
-      // tree is dead
-      ndead += (deathLevel == '4') ? 1 : 0;
-      affected = (deathLevel != '0') ? true : false;
+
+      // tree is affected in some way
+      if (deathLevel != 0) {
+        // store reasons for death to be displayed in doughnut chart
+        if ("reasonForDeath" in targetVisit && targetVisit.reasonForDeath != "") {
+          if (targetVisit.reasonForDeath in reasonsForDeath) {
+            reasonsForDeath[targetVisit.reasonForDeath]++;
+          } else {
+            reasonsForDeath[targetVisit.reasonForDeath] = 1;
+          }
+        }
+        // check if the tree is fully dead
+        if (deathLevel == "4") {
+          ndead += 1;
+          continue;
+        }
+      }
     }
 
     // add height and dap to appropriate accumulating variables
@@ -344,31 +394,35 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
     var rotten = ("rotten" in targetVisit) ? targetVisit.rotten : false;
     var sick = ("sick" in targetVisit) ? targetVisit.sick : false;
 
-    // healthy if no issues with any of the four health factors and not
-    // affected at any level
+    // healthy if no issues with any of the four health factors 
     var healthy = !(fungus || insect || rotten || sick); // || affected);
 
     if (healthy) {
       nhealthy++;
     }
+    else {
+      nunhealthy++;
+    }
 
-    // determine status of each health factor for the previous visit
-    if (previousVisit_forHealthData != undefined) {
-      var prev_fungus = ("fungus" in previousVisit_forHealthData) ? previousVisit_forHealthData.fungus : false;
-      var prev_insect = ("insect" in previousVisit_forHealthData) ? previousVisit_forHealthData.insect : false;
-      var prev_rotten = ("rotten" in previousVisit_forHealthData) ? previousVisit_forHealthData.rotten : false;
-      var prev_sick = ("sick" in previousVisit_forHealthData) ? previousVisit_forHealthData.sick : false;
-      var previousVisitWasHealthy = (previousVisit_forHealthData == undefined) ? true : !(prev_fungus || prev_insect || prev_rotten || prev_sick);
+    if (comparedVisit_healthData != undefined) {
+      var comp_fungus = ("fungus" in comparedVisit_healthData) ? comparedVisit_healthData.fungus : false;
+      var comp_insect = ("insect" in comparedVisit_healthData) ? comparedVisit_healthData.insect : false;
+      var comp_rotten = ("rotten" in comparedVisit_healthData) ? comparedVisit_healthData.rotten : false;
+      var comp_sick = ("sick" in comparedVisit_healthData) ? comparedVisit_healthData.sick : false;
+      var comparedVisitWasHealthy = (comparedVisit_healthData == undefined) ? true : !(comp_fungus || comp_insect || comp_rotten || comp_sick);
       // determine if our tree is newly healthy/unhealthy in this visit
       // compared to the previous visit
-      if (healthy && !previousVisitWasHealthy) {
+      if (healthy && !comparedVisitWasHealthy) {
         newly_healthy++;
+        newly_unhealthy--;
       }
-      if (!healthy && previousVisitWasHealthy) {
+      if (!healthy && comparedVisitWasHealthy) {
         newly_unhealthy++;
+        newly_healthy--;
       }
     }
 
+    // store health issues to be displayed in doughnut chart
     if (fungus) {
       if ("fungus" in healthIssues)
         healthIssues["fungus"]++;
@@ -393,26 +447,21 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
       else
         healthIssues["sick"] = 1;
     }
-    if (affected) {
-      if ("reasonForDeath" in targetVisit && targetVisit.reasonForDeath != "") {
-        if (targetVisit.reasonForDeath in reasonsForDeath) {
-          reasonsForDeath[targetVisit.reasonForDeath]++;
-        }
-        else {
-          reasonsForDeath[targetVisit.reasonForDeath] = 1;
-        }
-      }
+
+    // calculate average heights for each species
+    if (tree.specie in speciesTotalHeights) {
+      speciesTotalHeights[tree.specie] += ("height" in targetVisit) ? parseFloat(targetVisit.height) : 0;
+      speciesNumTrees[tree.specie] += 1;
     }
-
-
+    else {
+      speciesTotalHeights[tree.specie] = ("height" in targetVisit) ? parseFloat(targetVisit.height) : 0;
+      speciesNumTrees[tree.specie] = 1;
+    }
+    speciesAvgHeights[tree.specie] = speciesTotalHeights[tree.specie] / speciesNumTrees[tree.specie];
   }
   var nalive = ntrees - ndead;
-  console.log("sumOfHieghts: " + sumOfHeights);
   var avgHeight = sumOfHeights / nalive;
-  console.log("avgHeight in Parser: " + avgHeight);
-  console.log("sumOfDaps: " + sumOfDaps);
   var avgDap = sumOfDaps / nalive;
-  console.log("avgDap in Parser: " + avgDap);
 
   singleVisitData.maxNumVisits = maxNumVisits;
   singleVisitData.ntrees = ntrees;
@@ -420,11 +469,12 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
   singleVisitData.nhealthy = nhealthy;
   singleVisitData.newly_healthy = newly_healthy;
   singleVisitData.newly_unhealthy = newly_unhealthy;
-  singleVisitData.nunhealthy = ntrees - nhealthy;
+  singleVisitData.nunhealthy = nunhealthy;
   singleVisitData.healthIssues = healthIssues;
   singleVisitData.reasonsForDeath = reasonsForDeath;
   singleVisitData.avgHeight = avgHeight;
   singleVisitData.avgDap = avgDap;
+  singleVisitData.speciesAvgHeights = speciesAvgHeights;
 
   // check if each tree in the current region has information for the selected visit
   checkAllTreesHaveVisit(incompleteVisitData);
@@ -432,9 +482,6 @@ function parseDataSingleVisit(selectedRegion, selectedVisitNum) {
 }
 
 function compareVisits(currentVisitData, compareVisitData) {
-  console.log("avgHeight: " + currentVisitData.avgHeight);
-  console.log("avgDap: " + currentVisitData.avgDap);
-
   // note: compare visit happened before current visit
   // Get the comparison data we need for the new comparison cards
   var comparisonData = {}
@@ -443,10 +490,6 @@ function compareVisits(currentVisitData, compareVisitData) {
   comparisonData.changeNumDead = currentVisitData.ndead - compareVisitData.ndead;
   comparisonData.changeNumDeadPerc = compareVisitData.ndead == 0 ? 0 : parseFloat(((comparisonData.changeNumDead / compareVisitData.ndead) * 100).toFixed(2));
   
-  //comparisonData.changeNumHealthy = currentVisitData.nhealthy - compareVisitData.nhealthy;
-  //comparisonData.changeNumHealthyPerc = compareVisitData.nhealthy == 0 ? 0 : parseFloat(((comparisonData.changeNumHealthy / compareVisitData.nhealthy) * 100).toFixed(2));
-  //comparisonData.changeNumUnhealthy = currentVisitData.nunhealthy - compareVisitData.nunhealthy;
-  //comparisonData.changeNumUnhealthyPerc = compareVisitData.nunhealthy == 0 ? 0 : parseFloat(((comparisonData.changeNumUnhealthy / compareVisitData.nunhealthy) * 100).toFixed(2));
   comparisonData.changeNumHealthy = currentVisitData.newly_healthy;
   comparisonData.changeNumHealthyPerc = compareVisitData.newly_healthy == 0 ? 0 : parseFloat(((currentVisitData.newly_healthy / compareVisitData.nhealthy) * 100).toFixed(2));
   comparisonData.changeNumUnhealthy = currentVisitData.newly_unhealthy;
@@ -488,12 +531,27 @@ function compareVisits(currentVisitData, compareVisitData) {
     }
   }
 
+  // calculate average height changes per species
+  var height_changes = {};
+  var specie;
+  for (specie in compareVisitData.speciesAvgHeights) {
+    var height_change = (((currentVisitData.speciesAvgHeights[specie] - compareVisitData.speciesAvgHeights[specie]) / compareVisitData.speciesAvgHeights[specie]) * 100).toFixed(2);
+    height_changes[specie] = height_change;
+  }
+  // set negative height changes to zero
+  // (these come from inaccurate data reporting)
+  for (specie in height_changes) {
+    if (height_changes[specie] < 0) {
+      height_changes[specie] = '0';
+    } 
+  }
+  comparisonData.height_changes = height_changes;
+
   displayComparisonData(comparisonData);
 }
 
 // display the data for the comparison between two visits
 function displayComparisonData(cData) {
-  console.log("cData.changeNumTrackedPerc" + cData.changeNumTrackedPerc);
   // display the comparison data on the new cards
   document.getElementById("numTrees").innerHTML = `${cData.changeNumTracked} <i><span style="font-size:0.6em">(${cData.changeNumTrackedPerc}%)</span></i>`;
   document.getElementById("numberDead").innerHTML = `${cData.changeNumDead} <i><span style="font-size:0.6em">(${cData.changeNumDeadPerc}%)</span></i>`;
@@ -504,8 +562,8 @@ function displayComparisonData(cData) {
   document.getElementById("avgHeightChange").innerHTML = `${cData.changeAvgHeight} <i><span style="font-size:0.6em">(${cData.changeAvgHeightPerc}%)</span></i>`;
   document.getElementById("avgDapChange").innerHTML = `${cData.changeAvgDap} <i><span style="font-size:0.6em">(${cData.changeAvgDapPerc}%)</span></i>`;
 
-  // visualize changes in reasons for death and in health issues
-  createDougnutGraphs(cData.reasonsForDeath, cData.healthIssues);
+  // visualize changes in reasons for death, health issues, and height changes
+  createGraphs(cData.reasonsForDeath, cData.healthIssues, cData.height_changes);
 }
 
 // display cards and doughnut graph for information about a single visit
@@ -521,32 +579,33 @@ function displaySingleVisitData(singleVisitData) {
   var reasonsForDeath = singleVisitData.reasonsForDeath;
   var nunhealthy = singleVisitData.nunhealthy;
   var deadPercentage = parseFloat(((ndead / ntrees) * 100).toFixed(2));
-  var healthyPercentage = parseFloat((((nhealthy - ndead) / (ntrees - ndead)) * 100).toFixed(2));
+  var healthyPercentage = parseFloat((((nhealthy) / (ntrees - ndead)) * 100).toFixed(2));
   var unhealthyPercentage = parseFloat(((nunhealthy / (ntrees - ndead)) * 100).toFixed(2));
 
   document.getElementById("numTrees").innerHTML = ntrees;
   document.getElementById("numberDead").innerHTML = `${ndead}/${ntrees} <i><span style="font-size:0.6em">(${deadPercentage}%)</span></i>`;
-  document.getElementById("numberHealthy").innerHTML = `${nhealthy - ndead}/${ntrees - ndead} <i><span style="font-size:0.6em">(${healthyPercentage}%)</span></i>`;
+  document.getElementById("numberHealthy").innerHTML = `${nhealthy}/${ntrees - ndead} <i><span style="font-size:0.6em">(${healthyPercentage}%)</span></i>`;
   document.getElementById("numberUnhealthy").innerHTML = `${nunhealthy}/${ntrees - ndead} <i><span style="font-size:0.6em">(${unhealthyPercentage}%)</span></i>`;
 
-  // create 'reasons for death' and 'health issues' doughnut graphs
-  createDougnutGraphs(reasonsForDeath, healthIssues);
+  // create 'reasons for death' and 'health issues' doughnut graphs if either are applicable
+  createGraphs(reasonsForDeath, healthIssues);
 }
 
-function createDougnutGraphs(reasonsForDeath, healthIssues) {
+function createGraphs(reasonsForDeath, healthIssues, heightChanges=undefined) {
   // remove graphs and headers if no data is available, but show headers
   // and create doughnut graphs if data is available
+
+  // reasons for death doughnut chart
   if (Object.keys(reasonsForDeath).length == 0) {
-    console.log("display none, reasons for death");
     document.getElementById("reasonsForDeath-graph-div").style.display = "none";
   }
   else {
-    document.getElementById("reasonsForDeath-graph-div").style.display = "block";
+    document.getElementById("reasonsForDeath-graph-div").style.display = "inline-block";
     var deathChart = document.getElementById("doughnutChart-reasonsForDeath");
     if (typeof (deathChart) != undefined && deathChart != null) {
       $('#doughnutChart-reasonsForDeath').remove();
     }
-    $('#graphContainer').append('<canvas baseChart class ="chart" id="doughnutChart-reasonsForDeath"></canvas>');
+    $('#graphContainer1').append('<canvas baseChart class ="chart" id="doughnutChart-reasonsForDeath"></canvas>');
     var ctxD = document.getElementById("doughnutChart-reasonsForDeath").getContext('2d');
     var myDeathChart = new Chart(ctxD, {
       type: 'doughnut',
@@ -564,17 +623,17 @@ function createDougnutGraphs(reasonsForDeath, healthIssues) {
     });
   }
 
+  // health issues doughnut chart
   if (Object.keys(healthIssues).length == 0) {
-    console.log("display none, health issues");
     document.getElementById("healthIssues-graph-div").style.display = "none";
   }
   else {
-    document.getElementById("healthIssues-graph-div").style.display = "block";
+    document.getElementById("healthIssues-graph-div").style.display = "inline-block";
     var healthChart = document.getElementById("doughnutChart-healthIssues");
     if (typeof (healthChart) != undefined && healthChart != null) {
       $('#doughnutChart-healthIssues').remove();
     }
-    $('#graphContainer').append('<canvas baseChart class ="chart" id="doughnutChart-healthIssues"></canvas>');
+    $('#graphContainer2').append('<canvas baseChart class ="chart" id="doughnutChart-healthIssues"></canvas>');
     var ctxD = document.getElementById("doughnutChart-healthIssues").getContext('2d');
     var myHealthChart = new Chart(ctxD, {
       type: 'doughnut',
@@ -591,6 +650,80 @@ function createDougnutGraphs(reasonsForDeath, healthIssues) {
       }
     });
   }
+
+  // height change bar chart
+  if (heightChanges == undefined) {
+    document.getElementById("heightChanges-graph-div").style.display = "none";
+  }
+  else {
+    document.getElementById("heightChanges-graph-div").style.display = "block";
+    var growthChart = document.getElementById("barChart-heightChanges");
+    if (typeof (growthChart) != undefined && growthChart != null) {
+      $('#barChart-heightChanges').remove();
+    }
+    $('#graphContainer3').append('<canvas id="barChart-heightChanges"></canvas>');
+    var ctxB = document.getElementById("barChart-heightChanges").getContext('2d');
+    var heightChangesList = [];
+    var labels = [];
+    var specie;
+    var allGrowthRatesAreZero = true;
+    for(specie in heightChanges) {
+      if (heightChanges[specie] != 0) {
+        heightChangesList.push(heightChanges[specie]);
+        labels.push(specie);
+        allGrowthRatesAreZero = false;
+      }
+      else {
+        heightChangesList.push('0');
+        labels.push(specie);
+      }
+    }
+    // check that all height changes are not 0
+    if (allGrowthRatesAreZero) {
+      // don't display chart if all are 0
+      document.getElementById("heightChanges-graph-div").style.display = "none";
+      return;
+    }
+    var myBarChart = new Chart(ctxB, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: heightChangesList,
+          backgroundColor: $.map(heightChangesList, function (value, key) { return '#' + Math.floor(Math.random() * 16777215).toString(16) }),
+        }]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scaleShowValues: true,
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Average % Change in Height',
+              fontSize: 20
+            },
+            ticks: {
+              beginAtZero: true,
+            },
+          }],
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Species',
+              fontSize: 20
+            },
+            display: true,
+            ticks: {
+              autoSkip: false,
+            },
+          }]
+        },
+      }
+    });
+  } 
 }
 
 function setCardsToSingleVisit() {

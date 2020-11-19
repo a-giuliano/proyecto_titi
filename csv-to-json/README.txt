@@ -6,16 +6,14 @@ Instructions on how to convert a .xlsx file of tree data to CSV and then JSON fo
 
 3) Enter the following commands:
 
-    ./formatCSV.sh path/to/CSVFile/nameOfTreesCSVFile.csv
+    ./formatCSV.sh path/to/CSVFile/nameOfTreesCSVFile.csv    <--- Or you can manually format the CSV with command line tools yourself
 
     ./CSVtoJSON.py path/to/CSVFile/nameOfTreesCSVFile.csv path/to/newJSONFile/desiredNameOfTreesJSONFile.json
 
 Now you should have a JSON file with all of the tree data from the original .xlsx file.
 
 NOTE1: Minor manual editing of the CSV file may need to be done before the python script can handle it correctly
-       if some data on the .xlsx file does not match up exactly to the what the script is expecting. For example,
-       I had to change '160+' to '160' for the height of a tree because the script cannot handle the original input
-       as a float, as it tries to do. 
+       if some data on the .xlsx file does not match up exactly to the what the script is expecting. 
 
 NOTE2: The python script assumes the deathLevel attribute of each tree to be "Nivel 0: Afectación 0 %" when the
        reasonForDeath field is false and "Nivel 4: Afectación > 75 %" when it is non-false. If the reasonForDeath

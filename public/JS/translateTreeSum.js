@@ -44,6 +44,9 @@ function translate() {
     if (document.getElementById("previousOption") != null) {
         document.getElementById("previousOption").innerHTML = "Anterior";
     }
+    if (document.getElementById("growthRatesGraphHeader") != null) {
+        document.getElementById("growthRatesGraphHeader").innerHTML = "Promedio de Cambio Porcentual en la Altura Entre Visitas por Especie";
+    }
 }
 
 function detranslate() {
@@ -91,5 +94,9 @@ function detranslate() {
     }
     if (document.getElementById("previousOption") != null) {
         document.getElementById("previousOption").innerHTML = "Previous";
+    }
+
+    if (document.getElementById("growthRatesGraphHeader") != null) {
+        document.getElementById("growthRatesGraphHeader").innerHTML = "Average Percentage Change in Height Between Visits by Species";
     }
 }

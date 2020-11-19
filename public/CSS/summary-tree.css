@@ -1,9 +1,9 @@
-.cards{
-    width: 100%;
-    text-align: center;
+.cards {
+  width: 100%;
+  text-align: center;
 }
 
-.card{
+.card {
   width: 30%;
   height: 110px;
   display: inline-block;
@@ -18,24 +18,24 @@ h1 {
 }
 
 hr {
-  color : gray;
+  color: gray;
 }
 
-.header{
-    margin-top: 40px;
-    margin-bottom: 20px;
-    font-size: 22px;
-    font-weight: bold;
-    margin-left: 40px;
+.header {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  margin-left: 40px;
 }
 
-.dropdowns{
-    width: 100%;
-    text-align: left;
+.dropdowns {
+  width: 100%;
+  text-align: left;
 }
 
-.dropdown{
-  font-size:22px;
+.dropdown {
+  font-size: 22px;
   font-weight: bold;
   text-align: center;
   margin-left: 60px;
@@ -45,8 +45,8 @@ hr {
   vertical-align: middle;
 }
 
-.alert{
-  font-size:22px;
+.alert {
+  font-size: 22px;
   font-weight: bold;
   text-align: center;
   width: 100%;
@@ -56,8 +56,15 @@ hr {
 }
 
 #resetButton {
-  background-color: #A7CAB1;
+  background-color: #a7cab1;
   float: right;
   margin-right: 2em;
   margin-top: -8px;
+}
+
+canvas {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
 }

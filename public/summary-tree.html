@@ -53,8 +53,11 @@
     </div>
   </nav>
 
+  <!-- Test Photo -->
+  <!--<img id="test-photo" src="" width=200>-->
+
   <!--- Download Link ---->
-  <a style="margin-left: 5%" id="csv-link">Download data as csv</a>
+  <a style="margin-left: 5%; color:#5d8ffc" id="csv-link">Download data as csv</a>
   <button id="resetButton" onclick="resetOptions()">Reset</button>
 
   <!----- Dropdown Menus ----->
@@ -79,7 +82,6 @@
       <form>
         <p><span id="visitNumText">Visit Number: </span>
           <select class="visitNumSelect" id="visitNumSelectId">
-            <!---<option value="0" id="mostRecentOption">Most Recent</option>--->
             <!--- inserted options go here -->
           </select>
         </p> 
@@ -91,8 +93,6 @@
       <form id="compareVisitForm">
         <p><span id="compareVisitText">Compare to Visit: </span>
           <select class="compareVisitSelect" id="compareVisitSelectId">
-            <!---<option value="0" id="noneOption">None</option>
-            <option value="-1" id="previousOption">Previous</option>--->
             <!--- inserted options go here -->
           </select>
         </p> 
@@ -144,17 +144,29 @@
   <!-- Reasons for Death Doughnut Graph -->
   <div style="text-align:center; clear:both" id="reasonsForDeath-graph-div">
     <p class="header" id="deathGraphHeader">Reasons for Death</p>
-    <div class="graphs" id="graphContainer" style="display:inline-block; width: 1200px; height: 650px;"><canvas baseChart class="chart"
-        id="doughnutChart-reasonsForDeath"></canvas></div>
+    <div class="graphs" id="graphContainer1" style="display:inline-block; width: 1200px; height: 650px;">
+      <canvas baseChart class="chart" id="doughnutChart-reasonsForDeath"></canvas>
+    </div>
   </div>
 
   <!-- Health Issues Doughnut Graph -->
   <div style="text-align:center" id="healthIssues-graph-div">
     <p class="header" id="healthGraphHeader">Health Issues</p>
-    <div class="graphs" id="graphContainer" style="display:inline-block; width: 1200px; height: 650px;"><canvas baseChart class="chart"
-        id="doughnutChart-healthIssues"></canvas></div>
+    <div class="graphs" id="graphContainer2" style="display:inline-block; width: 1200px; height: 650px;">
+      <canvas baseChart class="chart" id="doughnutChart-healthIssues"></canvas>
+    </div>
   </div>
 
+  <br>
+
+  <!-- Species Height Changes Bar Chart -->
+  <div style="text-align: center" id="heightChanges-graph-div">
+    <p class="header" style="clear: both; text-align: center;" id="heightChangesGraphHeader">
+      Average Percentage Change in Height Between Visits by Species</p>
+    <div class="graphs" id="graphContainer3" style="display: inline-block; width: 1200px; height: 650px;">
+      <canvas baseChart class="chart" id="barChart-heightChanges"></canvas>
+    </div>
+  </div>
 
   <footer class="page-footer font-small">
     <button id="language" onClick="change();">Espanol</button>
