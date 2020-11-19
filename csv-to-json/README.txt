@@ -1,6 +1,7 @@
 Instructions on how to convert a .xlsx file of tree data to CSV and then JSON format:
 
-1) Download the .xlsx file from Google Sheets as a CSV file (with utf-8 encoding).
+1) Download the .xlsx file from Google Sheets as a CSV file (with utf-8 encoding). Can also download
+   files from Excel as CSV with utf-8 encoding, and these steps will work the same way. 
 
 2) Move the file to the directory with the files formatCSV.sh and CSVtoJSON.py (or subdirectory).
 
